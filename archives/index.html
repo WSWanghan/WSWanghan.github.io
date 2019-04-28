@@ -1,144 +1,175 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-<meta name="description" content="" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Welcome</title>
-<link rel="shortcut icon" href="https://WSWanghan.github.io/favicon.ico?v=1556459114384">
+    <meta charset="utf-8" >
+
+<title>文章归档 | Welcome</title>
+<meta name="description" content="悟已往之不谏，知来者之可追。">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://WSWanghan.github.io/favicon.ico?v=1556459542087">
 <link rel="stylesheet" href="https://WSWanghan.github.io/styles/main.css">
 
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
-<script src="https://cdn.bootcss.com/moment.js/2.23.0/moment.min.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
 
 
   </head>
   <body>
-    <div class="main">
-      <div class="main-content">
-        <div class="site-header">
-  <a href="https://WSWanghan.github.io">
-  <img class="avatar" src="https://WSWanghan.github.io/images/avatar.png?v=1556459114384" alt="">
-  </a>
-  <h1 class="site-title">
-    Welcome
-  </h1>
-  <p class="site-description">
-    悟已往之不谏，知来者之可追。
-  </p>
-  <div class="menu-container">
-    
-      
-        <a href="/" class="menu">
-          Home page
-        </a>
-      
-    
-      
-        <a href="https://WSWanghan.github.io" class="menu">
-          Hardware
-        </a>
-      
-    
-      
-        <a href="https://WSWanghan.github.io" class="menu">
-          Sketch-book
-        </a>
-      
-    
-      
-        <a href="https://WSWanghan.github.io" class="menu">
-          Word
-        </a>
-      
-    
-      
-        <a href="https://WSWanghan.github.io" class="menu">
-          About me
-        </a>
-      
-    
-      
-        <a href="https://WSWanghan.github.io" class="menu">
-          Software
-        </a>
-      
-    
-  </div>
-  <div class="social-container">
-    
-      
-    
-      
-    
-      
-    
-      
-    
-      
-    
-  </div>
-</div>
+    <div id="app" class="main">
 
-    
-        
-
-<div class="archives-container">
-  
-    <h2 class="year">2019</h2>
-    
-      
-        <article class="post">
-          <a href="https://WSWanghan.github.io/post/BLOG BUILD">
-            <h2 class="post-title">
-              小白搭建个人博客之免费版
-              <small>2019-04-28</small>
-            </h2>
-          </a>
-        </article>
-      
-    
-      
-        <article class="post">
-          <a href="https://WSWanghan.github.io/post/about-me">
-            <h2 class="post-title">
-              About me
-              <small>2019-04-27</small>
-            </h2>
-          </a>
-        </article>
-      
-    
-      
-        <article class="post">
-          <a href="https://WSWanghan.github.io/post/this-is-the-first-test">
-            <h2 class="post-title">
-              This Is The First Test
-              <small>2019-04-27</small>
-            </h2>
-          </a>
-        </article>
-      
-    
-  
-</div>
-
-    
-        <div class="pagination-container">
-  
-  
-</div>
-
-    
-        <div class="site-footer">
-  xxxxxxx <a href="xxxxxxxxxxxx" target="_blank">xxxxxxxx</a>
-</div>
-
-<script>
-  hljs.initHighlightingOnLoad()
-</script>
-
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://WSWanghan.github.io">
+        <img src="https://WSWanghan.github.io/images/avatar.png?v=1556459542087" class="site-logo">
+        <h1 class="site-title">Welcome</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
       </div>
     </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            Home page
+          </a>
+        
+      
+        
+          <a href="https://WSWanghan.github.io" class="site-nav">
+            Hardware
+          </a>
+        
+      
+        
+          <a href="https://WSWanghan.github.io" class="site-nav">
+            Sketch-book
+          </a>
+        
+      
+        
+          <a href="https://WSWanghan.github.io" class="site-nav">
+            Word
+          </a>
+        
+      
+        
+          <a href="https://WSWanghan.github.io" class="site-nav">
+            About me
+          </a>
+        
+      
+        
+          <a href="https://WSWanghan.github.io" class="site-nav">
+            Software
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      悟已往之不谏，知来者之可追。
+    </div>
+    <div class="site-footer">
+      xxxxxxx <a href="xxxxxxxxxxxx" target="_blank">xxxxxxxx</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          
+
+          <h2 class="archives-title">文章归档</h2>
+          <div class="archives-container">
+            
+              <h2 class="year" data-aos="fade-in" data-aos-delay="500">2019</h2>
+              
+                
+                  <article class="post">
+                    <a href="https://WSWanghan.github.io/post/BLOG BUILD">
+                      <h2 class="post-title">
+                        小白搭建个人博客之免费版
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://WSWanghan.github.io/post/about-me">
+                      <h2 class="post-title">
+                        About me
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+                
+                  <article class="post">
+                    <a href="https://WSWanghan.github.io/post/this-is-the-first-test">
+                      <h2 class="post-title">
+                        This Is The First Test
+                      </h2>
+                    </a>
+                  </article>
+                
+              
+            
+          </div>
+
+          <div class="pagination-container">
+  
+  
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
   </body>
 </html>
