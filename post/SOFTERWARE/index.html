@@ -1,0 +1,2315 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>关于校园网设备限速破解方案的一种猜想 | Welcome</title>
+<meta name="description" content="悟已往之不谏，知来者之可追。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+本人擅长 Ai 、 Fw 、FI、Ae、Pr、Id、Ps 等软件的安装与卸载，精通CSS、JavaScript、PHP、Pascal、C、C++、C#、java、Ruby、Lisp、pyhthon、objective -C 、 Actionscript等单词的拼写，熟悉 Windows 、 Linux 、 Mac 、 Android 、iOS 、 WP8等系统的开机关机~~~">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://WSWanghan.github.io/favicon.ico?v=1556539821773">
+<link rel="stylesheet" href="https://WSWanghan.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://WSWanghan.github.io">
+        <img src="https://WSWanghan.github.io/images/avatar.png?v=1556539821773" class="site-logo">
+        <h1 class="site-title">Welcome</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      悟已往之不谏，知来者之可追。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+本人擅长 Ai 、 Fw 、FI、Ae、Pr、Id、Ps 等软件的安装与卸载，精通CSS、JavaScript、PHP、Pascal、C、C++、C#、java、Ruby、Lisp、pyhthon、objective -C 、 Actionscript等单词的拼写，熟悉 Windows 、 Linux 、 Mac 、 Android 、iOS 、 WP8等系统的开机关机~~~
+    </div>
+    <div class="site-footer">
+      wh9266444266@gmail.com
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">关于校园网设备限速破解方案的一种猜想</h2>
+            <div class="post-date">2019-04-29</div>
+            
+              <div class="feature-container" style="background-image: url('https://WSWanghan.github.io/post-images/SOFTERWARE.jpg')">
+              </div>
+            
+            <div class="post-content">
+              <p>先来说说为什么会有这种想法：灵感来源是酱紫的</p>
+<p>/////////////////一天，我在弄ESP8266WIFI模块时，发现即使模块只连接校园网但不认证（不认证的话无法访问外网）也是可以连接上同一局域网下TCP 服务端的。这就有趣了，如果我们能在校园网内搭建一个流量转发的服务器，那么我们就可以通过这个服务器来转发我们的流量了，也就是可以用一个账号给服务器提供访问外网的能力，然后多个设备连接上服务器，那么这样就达到了我们文题所说的破解设备限制的目的。OK ，下面来讲下实践操作。</p>
+<p>按照笔者所在的学校，要想有一个稳定的服务器部署地址，最好的就是你有一个单独的实验室，然而弱鸡的笔者并没有实验室，故而笔者退而求其次，直接在宿舍部署！！！！！
+首先，这个服务是一个V2RAY翻墙脚本（也就是说你可以买个国外的服务器然后翻墙），运行在LINUX系统下，故而最好有一个LINUX系统，笔者的是虚拟机。打开SHELL编辑器，复制黏贴以下代码：#!/bin/bash</p>
+<p>red='\e[91m'
+green='\e[92m'
+yellow='\e[93m'
+magenta='\e[95m'
+cyan='\e[96m'
+none='\e[0m'</p>
+<h1 id="root">Root</h1>
+<p>[[ $(id -u) != 0 ]] &amp;&amp; echo -e &quot; 哎呀……请使用 ${red}root ${none}用户运行 ${yellow}~(^_^) ${none}&quot; &amp;&amp; exit 1</p>
+<p>cmd=&quot;apt-get&quot;</p>
+<p>sys_bit=$(uname -m)</p>
+<p>if [[ $sys_bit == &quot;i386&quot; || $sys_bit == &quot;i686&quot; ]]; then
+v2ray_bit=&quot;32&quot;
+elif [[ $sys_bit == &quot;x86_64&quot; ]]; then
+v2ray_bit=&quot;64&quot;
+else
+echo -e &quot; 哈哈……这个 {red}辣鸡脚本{none} 不支持你的系统。 ${yellow}(-_-) ${none}&quot; &amp;&amp; exit 1
+fi</p>
+<h1 id="笨笨的检测方法">笨笨的检测方法</h1>
+<p>if [[ -f /usr/bin/apt-get ]] || [[ -f /usr/bin/yum &amp;&amp; -f /bin/systemctl ]]; then</p>
+<pre><code>if [[ -f /usr/bin/yum ]]; then
+
+	cmd=&quot;yum&quot;
+
+fi
+if [[ -f /bin/systemctl ]]; then
+	systemd=true
+fi
+</code></pre>
+<p>else</p>
+<pre><code>echo -e &quot; 哈哈……这个 ${red}辣鸡脚本${none} 不支持你的系统。 ${yellow}(-_-) ${none}&quot; &amp;&amp; exit 1
+</code></pre>
+<p>fi</p>
+<p>uuid=$(cat /proc/sys/kernel/random/uuid)
+old_id=&quot;23332333-2333-2333-2333-233boy233boy&quot;
+v2ray_server_config=&quot;/etc/v2ray/config.json&quot;
+v2ray_client_config=&quot;/etc/v2ray/233blog_v2ray_config.json&quot;
+backup=&quot;/etc/v2ray/233blog_v2ray_backup.conf&quot;
+_v2ray_sh=&quot;/usr/local/sbin/v2ray&quot;</p>
+<p>transport=(
+TCP
+TCP_HTTP
+WebSocket
+&quot;WebSocket + TLS&quot;
+mKCP
+mKCP_utp
+mKCP_srtp
+mKCP_wechat-video
+TCP_dynamicPort
+TCP_HTTP_dynamicPort
+WebSocket_dynamicPort
+mKCP_dynamicPort
+mKCP_utp_dynamicPort
+mKCP_srtp_dynamicPort
+mKCP_wechat-video_dynamicPort
+HTTP/2
+Socks5
+)</p>
+<p>ciphers=(
+aes-128-cfb
+aes-256-cfb
+chacha20
+chacha20-ietf
+aes-128-gcm
+aes-256-gcm
+chacha20-ietf-poly1305
+)</p>
+<p>v2ray_config() {
+# clear
+echo
+while :; do
+echo -e &quot;请选择 &quot;<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>y</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>o</mi><mi>w</mi><mi mathvariant="normal">&quot;</mi><mi>V</mi><mn>2</mn><mi>R</mi><mi>a</mi><mi>y</mi><mi mathvariant="normal">&quot;</mi></mrow><annotation encoding="application/x-tex">yellow&quot;V2Ray&quot;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">e</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="mord mathrm">&quot;</span><span class="mord mathit" style="margin-right:0.22222em;">V</span><span class="mord mathrm">2</span><span class="mord mathit" style="margin-right:0.00773em;">R</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathrm">&quot;</span></span></span></span>none&quot; 传输协议 [<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi>m</mi><mi>a</mi><mi>g</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>a</mi></mrow><mn>1</mn><mo>−</mo></mrow><annotation encoding="application/x-tex">{magenta}1-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathit">m</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.03588em;">g</span><span class="mord mathit">e</span><span class="mord mathit">n</span><span class="mord mathit">t</span><span class="mord mathit">a</span></span><span class="mord mathrm">1</span><span class="mbin">−</span></span></span></span>{#transport[*]}$none]&quot;
+echo
+for ((i = 1; i &lt;= {#transport[*]}; i++)); do
+			Stream="{transport[i - 1]}"
+			if [[ "i&quot; -le 9 ]]; then
+# echo
+echo -e &quot;$yellow  $i. <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mi>o</mi><mi>n</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">none</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">n</span><span class="mord mathit">o</span><span class="mord mathit">n</span><span class="mord mathit">e</span></span></span></span>{Stream}&quot;
+else
+# echo
+echo -e &quot;$yellow $i. <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mi>o</mi><mi>n</mi><mi>e</mi></mrow><annotation encoding="application/x-tex">none</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.43056em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit">n</span><span class="mord mathit">o</span><span class="mord mathit">n</span><span class="mord mathit">e</span></span></span></span>{Stream}&quot;
+fi
+done
+echo
+echo &quot;备注1: 含有 [dynamicPort] 的即启用动态端口..&quot;
+echo &quot;备注2: [utp | srtp | wechat-video] 分别为 伪装成 [BT下载 | 视频通话 | 微信视频通话]&quot;
+echo
+read -p &quot;$(echo -e &quot;(默认协议: <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi>c</mi><mi>y</mi><mi>a</mi><mi>n</mi></mrow><mi>T</mi><mi>C</mi><mi>P</mi></mrow><annotation encoding="application/x-tex">{cyan}TCP</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathit">c</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">a</span><span class="mord mathit">n</span></span><span class="mord mathit" style="margin-right:0.13889em;">T</span><span class="mord mathit" style="margin-right:0.07153em;">C</span><span class="mord mathit" style="margin-right:0.13889em;">P</span></span></span></span>none)&quot;):&quot; v2ray_transport_opt
+[ -z &quot;$v2ray_transport_opt&quot; ] &amp;&amp; v2ray_transport_opt=1
+case <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>v</mi><mn>2</mn><mi>r</mi><mi>a</mi><msub><mi>y</mi><mi>t</mi></msub><mi>r</mi><mi>a</mi><mi>n</mi><mi>s</mi><mi>p</mi><mi>o</mi><mi>r</mi><msub><mi>t</mi><mi>o</mi></msub><mi>p</mi><mi>t</mi><mi>i</mi><mi>n</mi><mo>[</mo><mn>1</mn><mo>−</mo><mn>9</mn><mo>]</mo><mi mathvariant="normal">∣</mi><mn>1</mn><mo>[</mo><mn>0</mn><mo>−</mo><mn>7</mn><mo>]</mo><mo>)</mo><mi>e</mi><mi>c</mi><mi>h</mi><mi>o</mi><mi>e</mi><mi>c</mi><mi>h</mi><mi>o</mi><mi>e</mi><mi>c</mi><mi>h</mi><mi>o</mi><mo>−</mo><mi>e</mi><mi mathvariant="normal">&quot;</mi></mrow><annotation encoding="application/x-tex">v2ray_transport_opt in
+		[1-9] | 1[0-7])
+			echo
+			echo
+			echo -e &quot;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.03588em;">v</span><span class="mord mathrm">2</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">a</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">t</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">a</span><span class="mord mathit">n</span><span class="mord mathit">s</span><span class="mord mathit">p</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">o</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">p</span><span class="mord mathit">t</span><span class="mord mathit">i</span><span class="mord mathit">n</span><span class="mopen">[</span><span class="mord mathrm">1</span><span class="mbin">−</span><span class="mord mathrm">9</span><span class="mclose">]</span><span class="mord mathrm">∣</span><span class="mord mathrm">1</span><span class="mopen">[</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathrm">7</span><span class="mclose">]</span><span class="mclose">)</span><span class="mord mathit">e</span><span class="mord mathit">c</span><span class="mord mathit">h</span><span class="mord mathit">o</span><span class="mord mathit">e</span><span class="mord mathit">c</span><span class="mord mathit">h</span><span class="mord mathit">o</span><span class="mord mathit">e</span><span class="mord mathit">c</span><span class="mord mathit">h</span><span class="mord mathit">o</span><span class="mbin">−</span><span class="mord mathit">e</span><span class="mord mathrm">&quot;</span></span></span></span>yellow V2Ray 传输协议 = <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>c</mi><mi>y</mi><mi>a</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">cyan</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit">c</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">a</span><span class="mord mathit">n</span></span></span></span>{transport[v2ray_transport_opt - 1]}none&quot;
+echo &quot;----------------------------------------------------------------&quot;
+echo
+break
+;;
+*)
+error
+;;
+esac
+done
+v2ray_port_config
+}
+v2ray_port_config() {
+case <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>v</mi><mn>2</mn><mi>r</mi><mi>a</mi><msub><mi>y</mi><mi>t</mi></msub><mi>r</mi><mi>a</mi><mi>n</mi><mi>s</mi><mi>p</mi><mi>o</mi><mi>r</mi><msub><mi>t</mi><mi>o</mi></msub><mi>p</mi><mi>t</mi><mi>i</mi><mi>n</mi><mo>[</mo><mn>1</mn><mo>−</mo><mn>3</mn><mo>]</mo><mi mathvariant="normal">∣</mi><mo>[</mo><mn>5</mn><mo>−</mo><mn>9</mn><mo>]</mo><mi mathvariant="normal">∣</mi><mn>1</mn><mo>[</mo><mn>0</mn><mo>−</mo><mn>5</mn><mo>]</mo><mi mathvariant="normal">∣</mi><mn>1</mn><mn>7</mn><mo>)</mo><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi><mi>r</mi><mi>a</mi><mi>n</mi><mi>d</mi><mi>o</mi><mi>m</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">v2ray_transport_opt in
+	[1-3] | [5-9] | 1[0-5] | 17)
+		local random=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.03588em;">v</span><span class="mord mathrm">2</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">a</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">t</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">a</span><span class="mord mathit">n</span><span class="mord mathit">s</span><span class="mord mathit">p</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">o</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">p</span><span class="mord mathit">t</span><span class="mord mathit">i</span><span class="mord mathit">n</span><span class="mopen">[</span><span class="mord mathrm">1</span><span class="mbin">−</span><span class="mord mathrm">3</span><span class="mclose">]</span><span class="mord mathrm">∣</span><span class="mopen">[</span><span class="mord mathrm">5</span><span class="mbin">−</span><span class="mord mathrm">9</span><span class="mclose">]</span><span class="mord mathrm">∣</span><span class="mord mathrm">1</span><span class="mopen">[</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathrm">5</span><span class="mclose">]</span><span class="mord mathrm">∣</span><span class="mord mathrm">1</span><span class="mord mathrm">7</span><span class="mclose">)</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit">c</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">a</span><span class="mord mathit">n</span><span class="mord mathit">d</span><span class="mord mathit">o</span><span class="mord mathit">m</span><span class="mrel">=</span></span></span></span>(shuf -i20001-65535 -n1)
+while :; do
+echo -e &quot;请输入 &quot;<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>y</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>o</mi><mi>w</mi><mi mathvariant="normal">&quot;</mi><mi>V</mi><mn>2</mn><mi>R</mi><mi>a</mi><mi>y</mi><mi mathvariant="normal">&quot;</mi></mrow><annotation encoding="application/x-tex">yellow&quot;V2Ray&quot;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">e</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="mord mathrm">&quot;</span><span class="mord mathit" style="margin-right:0.22222em;">V</span><span class="mord mathrm">2</span><span class="mord mathit" style="margin-right:0.00773em;">R</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathrm">&quot;</span></span></span></span>none&quot; 端口 [&quot;<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>m</mi><mi>a</mi><mi>g</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>a</mi><mi mathvariant="normal">&quot;</mi><mn>1</mn><mo>−</mo><mn>6</mn><mn>5</mn><mn>5</mn><mn>3</mn><mn>5</mn><mi mathvariant="normal">&quot;</mi></mrow><annotation encoding="application/x-tex">magenta&quot;1-65535&quot;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit">m</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.03588em;">g</span><span class="mord mathit">e</span><span class="mord mathit">n</span><span class="mord mathit">t</span><span class="mord mathit">a</span><span class="mord mathrm">&quot;</span><span class="mord mathrm">1</span><span class="mbin">−</span><span class="mord mathrm">6</span><span class="mord mathrm">5</span><span class="mord mathrm">5</span><span class="mord mathrm">3</span><span class="mord mathrm">5</span><span class="mord mathrm">&quot;</span></span></span></span>none&quot;]&quot;
+read -p &quot;$(echo -e &quot;(默认端口: <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi>c</mi><mi>y</mi><mi>a</mi><mi>n</mi></mrow></mrow><annotation encoding="application/x-tex">{cyan}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathit">c</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">a</span><span class="mord mathit">n</span></span></span></span></span>{random}<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mi>o</mi><mi>n</mi><mi>e</mi><mo>)</mo><mo>:</mo><mi mathvariant="normal">&quot;</mi><mo>)</mo><mi mathvariant="normal">&quot;</mi><mi>v</mi><mn>2</mn><mi>r</mi><mi>a</mi><msub><mi>y</mi><mi>p</mi></msub><mi>o</mi><mi>r</mi><mi>t</mi><mo>[</mo><mo>−</mo><mi>z</mi><mi mathvariant="normal">&quot;</mi></mrow><annotation encoding="application/x-tex">none):&quot;)&quot; v2ray_port
+			[ -z &quot;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="base textstyle uncramped"><span class="mord mathit">n</span><span class="mord mathit">o</span><span class="mord mathit">n</span><span class="mord mathit">e</span><span class="mclose">)</span><span class="mrel">:</span><span class="mord mathrm">&quot;</span><span class="mclose">)</span><span class="mord mathrm">&quot;</span><span class="mord mathit" style="margin-right:0.03588em;">v</span><span class="mord mathrm">2</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">a</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">p</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">t</span><span class="mopen">[</span><span class="mord">−</span><span class="mord mathit" style="margin-right:0.04398em;">z</span><span class="mord mathrm">&quot;</span></span></span></span>v2ray_port&quot; ] &amp;&amp; v2ray_port=$random
+case <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>v</mi><mn>2</mn><mi>r</mi><mi>a</mi><msub><mi>y</mi><mi>p</mi></msub><mi>o</mi><mi>r</mi><mi>t</mi><mi>i</mi><mi>n</mi><mo>[</mo><mn>1</mn><mo>−</mo><mn>9</mn><mo>]</mo><mi mathvariant="normal">∣</mi><mo>[</mo><mn>1</mn><mo>−</mo><mn>9</mn><mo>]</mo><mo>[</mo><mn>0</mn><mo>−</mo><mn>9</mn><mo>]</mo><mi mathvariant="normal">∣</mi><mo>[</mo><mn>1</mn><mo>−</mo><mn>9</mn><mo>]</mo><mo>[</mo><mn>0</mn><mo>−</mo><mn>9</mn><mo>]</mo><mo>[</mo><mn>0</mn><mo>−</mo><mn>9</mn><mo>]</mo><mi mathvariant="normal">∣</mi><mo>[</mo><mn>1</mn><mo>−</mo><mn>9</mn><mo>]</mo><mo>[</mo><mn>0</mn><mo>−</mo><mn>9</mn><mo>]</mo><mo>[</mo><mn>0</mn><mo>−</mo><mn>9</mn><mo>]</mo><mo>[</mo><mn>0</mn><mo>−</mo><mn>9</mn><mo>]</mo><mi mathvariant="normal">∣</mi><mo>[</mo><mn>1</mn><mo>−</mo><mn>5</mn><mo>]</mo><mo>[</mo><mn>0</mn><mo>−</mo><mn>9</mn><mo>]</mo><mo>[</mo><mn>0</mn><mo>−</mo><mn>9</mn><mo>]</mo><mo>[</mo><mn>0</mn><mo>−</mo><mn>9</mn><mo>]</mo><mo>[</mo><mn>0</mn><mo>−</mo><mn>9</mn><mo>]</mo><mi mathvariant="normal">∣</mi><mn>6</mn><mo>[</mo><mn>0</mn><mo>−</mo><mn>4</mn><mo>]</mo><mo>[</mo><mn>0</mn><mo>−</mo><mn>9</mn><mo>]</mo><mo>[</mo><mn>0</mn><mo>−</mo><mn>9</mn><mo>]</mo><mo>[</mo><mn>0</mn><mo>−</mo><mn>9</mn><mo>]</mo><mi mathvariant="normal">∣</mi><mn>6</mn><mn>5</mn><mo>[</mo><mn>0</mn><mo>−</mo><mn>4</mn><mo>]</mo><mo>[</mo><mn>0</mn><mo>−</mo><mn>9</mn><mo>]</mo><mo>[</mo><mn>0</mn><mo>−</mo><mn>9</mn><mo>]</mo><mi mathvariant="normal">∣</mi><mn>6</mn><mn>5</mn><mn>5</mn><mo>[</mo><mn>0</mn><mo>−</mo><mn>3</mn><mo>]</mo><mo>[</mo><mn>0</mn><mo>−</mo><mn>5</mn><mo>]</mo><mo>)</mo><mi>e</mi><mi>c</mi><mi>h</mi><mi>o</mi><mi>e</mi><mi>c</mi><mi>h</mi><mi>o</mi><mi>e</mi><mi>c</mi><mi>h</mi><mi>o</mi><mo>−</mo><mi>e</mi><mi mathvariant="normal">&quot;</mi></mrow><annotation encoding="application/x-tex">v2ray_port in
+			[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9] | [1-5][0-9][0-9][0-9][0-9] | 6[0-4][0-9][0-9][0-9] | 65[0-4][0-9][0-9] | 655[0-3][0-5])
+				echo
+				echo
+				echo -e &quot;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.03588em;">v</span><span class="mord mathrm">2</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">a</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">p</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">t</span><span class="mord mathit">i</span><span class="mord mathit">n</span><span class="mopen">[</span><span class="mord mathrm">1</span><span class="mbin">−</span><span class="mord mathrm">9</span><span class="mclose">]</span><span class="mord mathrm">∣</span><span class="mopen">[</span><span class="mord mathrm">1</span><span class="mbin">−</span><span class="mord mathrm">9</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathrm">9</span><span class="mclose">]</span><span class="mord mathrm">∣</span><span class="mopen">[</span><span class="mord mathrm">1</span><span class="mbin">−</span><span class="mord mathrm">9</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathrm">9</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathrm">9</span><span class="mclose">]</span><span class="mord mathrm">∣</span><span class="mopen">[</span><span class="mord mathrm">1</span><span class="mbin">−</span><span class="mord mathrm">9</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathrm">9</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathrm">9</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathrm">9</span><span class="mclose">]</span><span class="mord mathrm">∣</span><span class="mopen">[</span><span class="mord mathrm">1</span><span class="mbin">−</span><span class="mord mathrm">5</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathrm">9</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathrm">9</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathrm">9</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathrm">9</span><span class="mclose">]</span><span class="mord mathrm">∣</span><span class="mord mathrm">6</span><span class="mopen">[</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathrm">4</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathrm">9</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathrm">9</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathrm">9</span><span class="mclose">]</span><span class="mord mathrm">∣</span><span class="mord mathrm">6</span><span class="mord mathrm">5</span><span class="mopen">[</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathrm">4</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathrm">9</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathrm">9</span><span class="mclose">]</span><span class="mord mathrm">∣</span><span class="mord mathrm">6</span><span class="mord mathrm">5</span><span class="mord mathrm">5</span><span class="mopen">[</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathrm">3</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathrm">5</span><span class="mclose">]</span><span class="mclose">)</span><span class="mord mathit">e</span><span class="mord mathit">c</span><span class="mord mathit">h</span><span class="mord mathit">o</span><span class="mord mathit">e</span><span class="mord mathit">c</span><span class="mord mathit">h</span><span class="mord mathit">o</span><span class="mord mathit">e</span><span class="mord mathit">c</span><span class="mord mathit">h</span><span class="mord mathit">o</span><span class="mbin">−</span><span class="mord mathit">e</span><span class="mord mathrm">&quot;</span></span></span></span>yellow V2Ray 端口 = <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>c</mi><mi>y</mi><mi>a</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">cyan</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit">c</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">a</span><span class="mord mathit">n</span></span></span></span>v2ray_port$none&quot;
+echo &quot;----------------------------------------------------------------&quot;
+echo
+break
+;;
+*)
+error
+;;
+esac
+done
+if [[ $v2ray_transport_opt -ge 9 &amp;&amp; $v2ray_transport_opt -le 15 ]]; then
+v2ray_dynamic_port_start
+elif [[ $v2ray_transport_opt == 17 ]]; then
+socks_user_config
+socks_pass_config
+fi
+;;
+*)
+tls_config
+;;
+esac
+}</p>
+<p>v2ray_dynamic_port_start() {</p>
+<pre><code>while :; do
+	echo -e &quot;请输入 &quot;$yellow&quot;V2Ray 动态端口开始 &quot;$none&quot;范围 [&quot;$magenta&quot;1-65535&quot;$none&quot;]&quot;
+	read -p &quot;$(echo -e &quot;(默认开始端口: ${cyan}10000$none):&quot;)&quot; v2ray_dynamic_port_start_input
+	[ -z $v2ray_dynamic_port_start_input ] &amp;&amp; v2ray_dynamic_port_start_input=10000
+	case $v2ray_dynamic_port_start_input in
+	$v2ray_port)
+		echo
+		echo &quot; 不能和 V2Ray 端口一毛一样....&quot;
+		echo
+		echo -e &quot; 当前 V2Ray 端口：${cyan}$v2ray_port${none}&quot;
+		error
+		;;
+	[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9] | [1-5][0-9][0-9][0-9][0-9] | 6[0-4][0-9][0-9][0-9] | 65[0-4][0-9][0-9] | 655[0-3][0-5])
+		echo
+		echo
+		echo -e &quot;$yellow V2Ray 动态端口开始 = $cyan$v2ray_dynamic_port_start_input$none&quot;
+		echo &quot;----------------------------------------------------------------&quot;
+		echo
+		break
+		;;
+	*)
+		error
+		;;
+	esac
+
+done
+
+if [[ $v2ray_dynamic_port_start_input -lt $v2ray_port ]]; then
+	lt_v2ray_port=true
+fi
+
+v2ray_dynamic_port_end
+</code></pre>
+<p>}
+v2ray_dynamic_port_end() {</p>
+<pre><code>while :; do
+	echo -e &quot;请输入 &quot;$yellow&quot;V2Ray 动态端口结束 &quot;$none&quot;范围 [&quot;$magenta&quot;1-65535&quot;$none&quot;]&quot;
+	read -p &quot;$(echo -e &quot;(默认结束端口: ${cyan}20000$none):&quot;)&quot; v2ray_dynamic_port_end_input
+	[ -z $v2ray_dynamic_port_end_input ] &amp;&amp; v2ray_dynamic_port_end_input=20000
+	case $v2ray_dynamic_port_end_input in
+	[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9] | [1-5][0-9][0-9][0-9][0-9] | 6[0-4][0-9][0-9][0-9] | 65[0-4][0-9][0-9] | 655[0-3][0-5])
+
+		if [[ $v2ray_dynamic_port_end_input -le $v2ray_dynamic_port_start_input ]]; then
+			echo
+			echo &quot; 不能小于或等于 V2Ray 动态端口开始范围&quot;
+			echo
+			echo -e &quot; 当前 V2Ray 动态端口开始：${cyan}$v2ray_dynamic_port_start_input${none}&quot;
+			error
+		elif [ $lt_v2ray_port ] &amp;&amp; [[ ${v2ray_dynamic_port_end_input} -ge $v2ray_port ]]; then
+			echo
+			echo &quot; V2Ray 动态端口结束范围 不能包括 V2Ray 端口...&quot;
+			echo
+			echo -e &quot; 当前 V2Ray 端口：${cyan}$v2ray_port${none}&quot;
+			error
+		else
+			echo
+			echo
+			echo -e &quot;$yellow V2Ray 动态端口结束 = $cyan$v2ray_dynamic_port_end_input$none&quot;
+			echo &quot;----------------------------------------------------------------&quot;
+			echo
+			break
+		fi
+		;;
+	*)
+		error
+		;;
+	esac
+
+done
+</code></pre>
+<p>}</p>
+<p>socks_user_config() {
+while :; do
+read -p &quot;(echo -e "请输入yellow用户名$none...(默认用户名: <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi>c</mi><mi>y</mi><mi>a</mi><mi>n</mi></mrow><mn>2</mn><mn>3</mn><mn>3</mn><mi>b</mi><mi>l</mi><mi>o</mi><mi>g</mi></mrow><annotation encoding="application/x-tex">{cyan}233blog</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathit">c</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">a</span><span class="mord mathit">n</span></span><span class="mord mathrm">2</span><span class="mord mathrm">3</span><span class="mord mathrm">3</span><span class="mord mathit">b</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.03588em;">g</span></span></span></span>none)&quot;): &quot; username
+[ -z &quot;$username&quot; ] &amp;&amp; username=&quot;233blog&quot;
+case <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>u</mi><mi>s</mi><mi>e</mi><mi>r</mi><mi>n</mi><mi>a</mi><mi>m</mi><mi>e</mi><mi>i</mi><mi>n</mi><mo>∗</mo><mo>[</mo><mi mathvariant="normal">/</mi></mrow><annotation encoding="application/x-tex">username in
+		*[/</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit">u</span><span class="mord mathit">s</span><span class="mord mathit">e</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">n</span><span class="mord mathit">a</span><span class="mord mathit">m</span><span class="mord mathit">e</span><span class="mord mathit">i</span><span class="mord mathit">n</span><span class="mbin">∗</span><span class="mopen">[</span><span class="mord mathrm">/</span></span></span></span>]* | <em>&amp;</em>)
+echo
+echo -e &quot; 由于这个脚本太辣鸡了..所以用户名不能包含$red / none或red $ none或red &amp; none这三个符号.... "
+			echo
+			error
+			;;
+		*)
+			echo
+			echo
+			echo -e "yellow 用户名 = <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>c</mi><mi>y</mi><mi>a</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">cyan</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit">c</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">a</span><span class="mord mathit">n</span></span></span></span>username$none&quot;
+echo &quot;----------------------------------------------------------------&quot;
+echo
+break
+;;
+esac
+done</p>
+<p>}
+socks_pass_config() {
+while :; do
+read -p &quot;(echo -e "请输入yellow密码$none...(默认密码: <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi>c</mi><mi>y</mi><mi>a</mi><mi>n</mi></mrow><mn>2</mn><mn>3</mn><mn>3</mn><mi>b</mi><mi>l</mi><mi>o</mi><mi>g</mi><mi mathvariant="normal">.</mi><mi>c</mi><mi>o</mi><mi>m</mi></mrow><annotation encoding="application/x-tex">{cyan}233blog.com</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathit">c</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">a</span><span class="mord mathit">n</span></span><span class="mord mathrm">2</span><span class="mord mathrm">3</span><span class="mord mathrm">3</span><span class="mord mathit">b</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.03588em;">g</span><span class="mord mathrm">.</span><span class="mord mathit">c</span><span class="mord mathit">o</span><span class="mord mathit">m</span></span></span></span>none)&quot;): &quot; userpass
+[ -z &quot;$userpass&quot; ] &amp;&amp; userpass=&quot;233blog.com&quot;
+case <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>u</mi><mi>s</mi><mi>e</mi><mi>r</mi><mi>p</mi><mi>a</mi><mi>s</mi><mi>s</mi><mi>i</mi><mi>n</mi><mo>∗</mo><mo>[</mo><mi mathvariant="normal">/</mi></mrow><annotation encoding="application/x-tex">userpass in
+		*[/</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit">u</span><span class="mord mathit">s</span><span class="mord mathit">e</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">p</span><span class="mord mathit">a</span><span class="mord mathit">s</span><span class="mord mathit">s</span><span class="mord mathit">i</span><span class="mord mathit">n</span><span class="mbin">∗</span><span class="mopen">[</span><span class="mord mathrm">/</span></span></span></span>]* | <em>&amp;</em>)
+echo
+echo -e &quot; 由于这个脚本太辣鸡了..所以密码不能包含$red / none或red $ none或red &amp; none这三个符号.... "
+			echo
+			error
+			;;
+		*)
+			echo
+			echo
+			echo -e "yellow 密码 = <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>c</mi><mi>y</mi><mi>a</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">cyan</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit">c</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">a</span><span class="mord mathit">n</span></span></span></span>userpass$none&quot;
+echo &quot;----------------------------------------------------------------&quot;
+echo
+break
+;;
+esac
+done
+}</p>
+<p>tls_config() {</p>
+<pre><code>echo
+local random=$(shuf -i20001-65535 -n1)
+while :; do
+	echo -e &quot;请输入 &quot;$yellow&quot;V2Ray&quot;$none&quot; 端口 [&quot;$magenta&quot;1-65535&quot;$none&quot;]，不能选择 &quot;$magenta&quot;80&quot;$none&quot; 或 &quot;$magenta&quot;443&quot;$none&quot; 端口&quot;
+	read -p &quot;$(echo -e &quot;(默认端口: ${cyan}${random}$none):&quot;)&quot; v2ray_port
+	[ -z &quot;$v2ray_port&quot; ] &amp;&amp; v2ray_port=$random
+	case $v2ray_port in
+	80)
+		echo
+		echo &quot; ...都说了不能选择 80 端口了咯.....&quot;
+		error
+		;;
+	443)
+		echo
+		echo &quot; ..都说了不能选择 443 端口了咯.....&quot;
+		error
+		;;
+	[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9] | [1-5][0-9][0-9][0-9][0-9] | 6[0-4][0-9][0-9][0-9] | 65[0-4][0-9][0-9] | 655[0-3][0-5])
+		echo
+		echo
+		echo -e &quot;$yellow V2Ray 端口 = $cyan$v2ray_port$none&quot;
+		echo &quot;----------------------------------------------------------------&quot;
+		echo
+		break
+		;;
+	*)
+		error
+		;;
+	esac
+done
+
+while :; do
+	echo
+	echo -e &quot;请输入一个 $magenta正确的域名$none，一定一定一定要正确，不！能！出！错！&quot;
+	read -p &quot;(例如：233blog.com): &quot; domain
+	[ -z &quot;$domain&quot; ] &amp;&amp; error &amp;&amp; continue
+	echo
+	echo
+	echo -e &quot;$yellow 你的域名 = $cyan$domain$none&quot;
+	echo &quot;----------------------------------------------------------------&quot;
+	break
+done
+get_ip
+echo
+echo
+echo -e &quot;$yellow 请将 $magenta$domain$none $yellow解析到: $cyan$ip$none&quot;
+echo
+echo -e &quot;$yellow 请将 $magenta$domain$none $yellow解析到: $cyan$ip$none&quot;
+echo
+echo -e &quot;$yellow 请将 $magenta$domain$none $yellow解析到: $cyan$ip$none&quot;
+echo &quot;----------------------------------------------------------------&quot;
+echo
+
+while :; do
+
+	read -p &quot;$(echo -e &quot;(是否已经正确解析: [${magenta}Y$none]):&quot;) &quot; record
+	if [[ -z &quot;$record&quot; ]]; then
+		error
+	else
+		if [[ &quot;$record&quot; == [Yy] ]]; then
+			echo
+			echo
+			echo -e &quot;$yellow 域名解析 = ${cyan}我确定已经有解析了$none&quot;
+			echo &quot;----------------------------------------------------------------&quot;
+			echo
+			break
+		else
+			error
+		fi
+	fi
+
+done
+
+if [[ $v2ray_transport_opt -ne 16 ]]; then
+	auto_tls_config
+else
+	caddy=true
+	install_caddy_info=&quot;打开&quot;
+fi
+
+if [[ $caddy ]]; then
+	path_config_ask
+fi
+</code></pre>
+<p>}
+auto_tls_config() {
+echo -e &quot;</p>
+<pre><code>	安装 Caddy 来实现 自动配置 TLS
+	
+	如果你已经安装 Nginx 或 Caddy
+
+	$yellow并且..自己能搞定配置 TLS$none
+
+	那么就不需要 打开自动配置 TLS
+	&quot;
+echo &quot;----------------------------------------------------------------&quot;
+echo
+
+while :; do
+
+	read -p &quot;$(echo -e &quot;(是否自动配置 TLS: [${magenta}Y/N$none]):&quot;) &quot; auto_install_caddy
+	if [[ -z &quot;$auto_install_caddy&quot; ]]; then
+		error
+	else
+		if [[ &quot;$auto_install_caddy&quot; == [Yy] ]]; then
+			caddy=true
+			install_caddy_info=&quot;打开&quot;
+			echo
+			echo
+			echo -e &quot;$yellow 自动配置 TLS = $cyan$install_caddy_info$none&quot;
+			echo &quot;----------------------------------------------------------------&quot;
+			echo
+			break
+		elif [[ &quot;$auto_install_caddy&quot; == [Nn] ]]; then
+			install_caddy_info=&quot;关闭&quot;
+			echo
+			echo
+			echo -e &quot;$yellow 自动配置 TLS = $cyan$install_caddy_info$none&quot;
+			echo &quot;----------------------------------------------------------------&quot;
+			echo
+			break
+		else
+			error
+		fi
+	fi
+
+done
+</code></pre>
+<p>}
+path_config_ask() {
+echo
+while :; do
+echo -e &quot;是否开启 网站伪装 和 路径分流 [<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi>m</mi><mi>a</mi><mi>g</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>a</mi></mrow><mi>Y</mi><mi mathvariant="normal">/</mi><mi>N</mi></mrow><annotation encoding="application/x-tex">{magenta}Y/N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathit">m</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.03588em;">g</span><span class="mord mathit">e</span><span class="mord mathit">n</span><span class="mord mathit">t</span><span class="mord mathit">a</span></span><span class="mord mathit" style="margin-right:0.22222em;">Y</span><span class="mord mathrm">/</span><span class="mord mathit" style="margin-right:0.10903em;">N</span></span></span></span>none]&quot;
+read -p &quot;(echo -e "(默认: [{cyan}N$none]):&quot;)&quot; is_path
+[[ -z $is_path ]] &amp;&amp; is_path=&quot;n&quot;</p>
+<pre><code>	case $is_path in
+	Y | y)
+		path_config
+		break
+		;;
+	N | n)
+		echo
+		echo
+		echo -e &quot;$yellow 网站伪装 和 路径分流 = $cyan不想配置$none&quot;
+		echo &quot;----------------------------------------------------------------&quot;
+		echo
+		break
+		;;
+	*)
+		error
+		;;
+	esac
+done
+</code></pre>
+<p>}
+path_config() {
+echo
+while :; do
+echo -e &quot;请输入想要 {magenta}用来分流的路径none , 例如 /233blog , 那么只需要输入 233blog 即可&quot;
+read -p &quot;(echo -e "(默认: [{cyan}233blog$none]):&quot;)&quot; path
+[[ -z $path ]] &amp;&amp; path=&quot;233blog&quot;</p>
+<pre><code>	case $path in
+	*[/$]*)
+		echo
+		echo -e &quot; 由于这个脚本太辣鸡了..所以分流的路径不能包含$red / $none或$red $ $none这两个符号.... &quot;
+		echo
+		error
+		;;
+	*)
+		echo
+		echo
+		echo -e &quot;$yellow 分流的路径 = ${cyan}/${path}$none&quot;
+		echo &quot;----------------------------------------------------------------&quot;
+		echo
+		break
+		;;
+	esac
+done
+proxy_site_config
+</code></pre>
+<p>}
+proxy_site_config() {
+echo
+while :; do
+echo -e &quot;请输入 {magenta}一个正确的none {cyan}网址none 用来作为 {cyan}网站的伪装none , 例如 https://liyafly.com&quot;
+echo -e &quot;举例...你当前的域名是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>g</mi><mi>r</mi><mi>e</mi><mi>e</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">green</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.03588em;">g</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">e</span><span class="mord mathit">e</span><span class="mord mathit">n</span></span></span></span>domainnone , 伪装的网址的是 https://liyafly.com"
+		echo -e "然后打开你的域名时候...显示出来的内容就是来自 https://liyafly.com 的内容"
+		echo -e "其实就是一个反代...明白就好..."
+		echo -e "如果不能伪装成功...可以使用 v2ray config 修改伪装的网址"
+		read -p "(echo -e &quot;(默认: [<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi>c</mi><mi>y</mi><mi>a</mi><mi>n</mi></mrow><mi>h</mi><mi>t</mi><mi>t</mi><mi>p</mi><mi>s</mi><mo>:</mo><mi mathvariant="normal">/</mi><mi mathvariant="normal">/</mi><mi>l</mi><mi>i</mi><mi>y</mi><mi>a</mi><mi>f</mi><mi>l</mi><mi>y</mi><mi mathvariant="normal">.</mi><mi>c</mi><mi>o</mi><mi>m</mi></mrow><annotation encoding="application/x-tex">{cyan}https://liyafly.com</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathit">c</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">a</span><span class="mord mathit">n</span></span><span class="mord mathit">h</span><span class="mord mathit">t</span><span class="mord mathit">t</span><span class="mord mathit">p</span><span class="mord mathit">s</span><span class="mrel">:</span><span class="mord mathrm">/</span><span class="mord mathrm">/</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">i</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathrm">.</span><span class="mord mathit">c</span><span class="mord mathit">o</span><span class="mord mathit">m</span></span></span></span>none]):&quot;)&quot; proxy_site
+[[ -z $proxy_site ]] &amp;&amp; proxy_site=&quot;https://liyafly.com&quot;</p>
+<pre><code>	case $proxy_site in
+	*[#$]*)
+		echo
+		echo -e &quot; 由于这个脚本太辣鸡了..所以伪装的网址不能包含$red # $none或$red $ $none这两个符号.... &quot;
+		echo
+		error
+		;;
+	*)
+		echo
+		echo
+		echo -e &quot;$yellow 伪装的网址 = ${cyan}${proxy_site}$none&quot;
+		echo &quot;----------------------------------------------------------------&quot;
+		echo
+		break
+		;;
+	esac
+done
+</code></pre>
+<p>}</p>
+<p>blocked_hosts() {
+echo
+while :; do
+echo -e &quot;是否开启广告拦截 [<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi>m</mi><mi>a</mi><mi>g</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>a</mi></mrow><mi>Y</mi><mi mathvariant="normal">/</mi><mi>N</mi></mrow><annotation encoding="application/x-tex">{magenta}Y/N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathit">m</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.03588em;">g</span><span class="mord mathit">e</span><span class="mord mathit">n</span><span class="mord mathit">t</span><span class="mord mathit">a</span></span><span class="mord mathit" style="margin-right:0.22222em;">Y</span><span class="mord mathrm">/</span><span class="mord mathit" style="margin-right:0.10903em;">N</span></span></span></span>none]&quot;
+read -p &quot;(echo -e "(默认 [{cyan}N$none]):&quot;)&quot; blocked_ad
+[[ -z $blocked_ad ]] &amp;&amp; blocked_ad=&quot;n&quot;</p>
+<pre><code>	case $blocked_ad in
+	Y | y)
+		blocked_ad_info=&quot;开启&quot;
+		is_blocked_ad=true
+		echo
+		echo
+		echo -e &quot;$yellow 广告拦截 = $cyan开启$none&quot;
+		echo &quot;----------------------------------------------------------------&quot;
+		echo
+		break
+		;;
+	N | n)
+		blocked_ad_info=&quot;关闭&quot;
+		echo
+		echo
+		echo -e &quot;$yellow 广告拦截 = $cyan关闭$none&quot;
+		echo &quot;----------------------------------------------------------------&quot;
+		echo
+		break
+		;;
+	*)
+		error
+		;;
+	esac
+done
+</code></pre>
+<p>}
+shadowsocks_config() {</p>
+<pre><code>echo
+
+while :; do
+	echo -e &quot;是否配置 ${yellow}Shadowsocks${none} [${magenta}Y/N$none]&quot;
+	read -p &quot;$(echo -e &quot;(默认 [${cyan}N$none]):&quot;) &quot; install_shadowsocks
+	[[ -z &quot;$install_shadowsocks&quot; ]] &amp;&amp; install_shadowsocks=&quot;n&quot;
+	if [[ &quot;$install_shadowsocks&quot; == [Yy] ]]; then
+		echo
+		shadowsocks=true
+		shadowsocks_port_config
+		break
+	elif [[ &quot;$install_shadowsocks&quot; == [Nn] ]]; then
+		break
+	else
+		error
+	fi
+
+done
+</code></pre>
+<p>}</p>
+<p>shadowsocks_port_config() {
+local random=(shuf -i20001-65535 -n1)
+	while :; do
+		echo -e "请输入 "yellow&quot;Shadowsocks&quot;none" 端口 ["magenta&quot;1-65535&quot;none"]，不能和 "yellow&quot;V2Ray&quot;none" 端口相同"
+		read -p "(echo -e &quot;(默认端口: <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi>c</mi><mi>y</mi><mi>a</mi><mi>n</mi></mrow></mrow><annotation encoding="application/x-tex">{cyan}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathit">c</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">a</span><span class="mord mathit">n</span></span></span></span></span>{random}<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mi>o</mi><mi>n</mi><mi>e</mi><mo>)</mo><mo>:</mo><mi mathvariant="normal">&quot;</mi><mo>)</mo><mi mathvariant="normal">&quot;</mi><mi>s</mi><mi>s</mi><mi>p</mi><mi>o</mi><mi>r</mi><mi>t</mi><mo>[</mo><mo>−</mo><mi>z</mi><mi mathvariant="normal">&quot;</mi></mrow><annotation encoding="application/x-tex">none):&quot;) &quot; ssport
+		[ -z &quot;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit">n</span><span class="mord mathit">o</span><span class="mord mathit">n</span><span class="mord mathit">e</span><span class="mclose">)</span><span class="mrel">:</span><span class="mord mathrm">&quot;</span><span class="mclose">)</span><span class="mord mathrm">&quot;</span><span class="mord mathit">s</span><span class="mord mathit">s</span><span class="mord mathit">p</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">t</span><span class="mopen">[</span><span class="mord">−</span><span class="mord mathit" style="margin-right:0.04398em;">z</span><span class="mord mathrm">&quot;</span></span></span></span>ssport&quot; ] &amp;&amp; ssport=$random
+case $ssport in
+$v2ray_port)
+echo
+echo &quot; 不能和 V2Ray 端口一毛一样....&quot;
+error
+;;
+[1-9] | [1-9][0-9] | [1-9][0-9][0-9] | [1-9][0-9][0-9][0-9] | [1-5][0-9][0-9][0-9][0-9] | 6[0-4][0-9][0-9][0-9] | 65[0-4][0-9][0-9] | 655[0-3][0-5])
+if [[ $v2ray_transport_opt == &quot;4&quot; || $v2ray_transport_opt == &quot;16&quot; ]]; then
+local tls=ture
+fi
+if [[ $tls &amp;&amp; $ssport == &quot;80&quot; ]] || [[ $tls &amp;&amp; ssport == "443" ]]; then
+				echo
+				echo -e "由于你已选择了 "green&quot;WebSocket + TLS none或green HTTP/2&quot;none" 传输协议."
+				echo
+				echo -e "所以不能选择 "magenta&quot;80&quot;none" 或 "magenta&quot;443&quot;$none&quot; 端口&quot;
+error
+elif [[ $v2ray_dynamic_port_start_input == $ssport || $v2ray_dynamic_port_end_input == <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mi>s</mi><mi>p</mi><mi>o</mi><mi>r</mi><mi>t</mi><mo>]</mo><mo>]</mo><mo separator="true">;</mo><mi>t</mi><mi>h</mi><mi>e</mi><mi>n</mi><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi><mi>m</mi><mi>u</mi><mi>l</mi><mi>t</mi><msub><mi>i</mi><mi>p</mi></msub><mi>o</mi><mi>r</mi><mi>t</mi><mo>=</mo><mi mathvariant="normal">&quot;</mi></mrow><annotation encoding="application/x-tex">ssport ]]; then
+				local multi_port=&quot;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="base textstyle uncramped"><span class="mord mathit">s</span><span class="mord mathit">s</span><span class="mord mathit">p</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">t</span><span class="mclose">]</span><span class="mclose">]</span><span class="mpunct">;</span><span class="mord mathit">t</span><span class="mord mathit">h</span><span class="mord mathit">e</span><span class="mord mathit">n</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit">c</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">m</span><span class="mord mathit">u</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">t</span><span class="mord"><span class="mord mathit">i</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">p</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">t</span><span class="mrel">=</span><span class="mord mathrm">&quot;</span></span></span></span>{v2ray_dynamic_port_start_input} - {v2ray_dynamic_port_end_input}"
+				echo
+				echo " 抱歉，此端口和 V2Ray 动态端口 冲突，当前 V2Ray 动态端口范围为：multi_port&quot;
+error
+elif [[ $v2ray_dynamic_port_start_input -lt $ssport &amp;&amp; $ssport -le <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>v</mi><mn>2</mn><mi>r</mi><mi>a</mi><msub><mi>y</mi><mi>d</mi></msub><mi>y</mi><mi>n</mi><mi>a</mi><mi>m</mi><mi>i</mi><msub><mi>c</mi><mi>p</mi></msub><mi>o</mi><mi>r</mi><msub><mi>t</mi><mi>e</mi></msub><mi>n</mi><msub><mi>d</mi><mi>i</mi></msub><mi>n</mi><mi>p</mi><mi>u</mi><mi>t</mi><mo>]</mo><mo>]</mo><mo separator="true">;</mo><mi>t</mi><mi>h</mi><mi>e</mi><mi>n</mi><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi><mi>m</mi><mi>u</mi><mi>l</mi><mi>t</mi><msub><mi>i</mi><mi>p</mi></msub><mi>o</mi><mi>r</mi><mi>t</mi><mo>=</mo><mi mathvariant="normal">&quot;</mi></mrow><annotation encoding="application/x-tex">v2ray_dynamic_port_end_input ]]; then
+				local multi_port=&quot;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.03588em;">v</span><span class="mord mathrm">2</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">a</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">d</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">n</span><span class="mord mathit">a</span><span class="mord mathit">m</span><span class="mord mathit">i</span><span class="mord"><span class="mord mathit">c</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">p</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">e</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">n</span><span class="mord"><span class="mord mathit">d</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">i</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">n</span><span class="mord mathit">p</span><span class="mord mathit">u</span><span class="mord mathit">t</span><span class="mclose">]</span><span class="mclose">]</span><span class="mpunct">;</span><span class="mord mathit">t</span><span class="mord mathit">h</span><span class="mord mathit">e</span><span class="mord mathit">n</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit">c</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">m</span><span class="mord mathit">u</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">t</span><span class="mord"><span class="mord mathit">i</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">p</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">t</span><span class="mrel">=</span><span class="mord mathrm">&quot;</span></span></span></span>{v2ray_dynamic_port_start_input} - {v2ray_dynamic_port_end_input}"
+				echo
+				echo " 抱歉，此端口和 V2Ray 动态端口 冲突，当前 V2Ray 动态端口范围为：multi_port&quot;
+error
+else
+echo
+echo
+echo -e &quot;$yellow Shadowsocks 端口 = <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>c</mi><mi>y</mi><mi>a</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">cyan</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit">c</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">a</span><span class="mord mathit">n</span></span></span></span>ssport$none&quot;
+echo &quot;----------------------------------------------------------------&quot;
+echo
+break
+fi
+;;
+*)
+error
+;;
+esac</p>
+<pre><code>done
+
+shadowsocks_password_config
+</code></pre>
+<p>}
+shadowsocks_password_config() {</p>
+<pre><code>while :; do
+	echo -e &quot;请输入 &quot;$yellow&quot;Shadowsocks&quot;$none&quot; 密码&quot;
+	read -p &quot;$(echo -e &quot;(默认密码: ${cyan}233blog.com$none)&quot;): &quot; sspass
+	[ -z &quot;$sspass&quot; ] &amp;&amp; sspass=&quot;233blog.com&quot;
+	case $sspass in
+	*[/$]*)
+		echo
+		echo -e &quot; 由于这个脚本太辣鸡了..所以密码不能包含$red / $none或$red $ $none这两个符号.... &quot;
+		echo
+		error
+		;;
+	*)
+		echo
+		echo
+		echo -e &quot;$yellow Shadowsocks 密码 = $cyan$sspass$none&quot;
+		echo &quot;----------------------------------------------------------------&quot;
+		echo
+		break
+		;;
+	esac
+
+done
+
+shadowsocks_ciphers_config
+</code></pre>
+<p>}
+shadowsocks_ciphers_config() {</p>
+<pre><code>while :; do
+	echo -e &quot;请选择 &quot;$yellow&quot;Shadowsocks&quot;$none&quot; 加密协议 [${magenta}1-${#ciphers[*]}$none]&quot;
+	for ((i = 1; i &lt;= ${#ciphers[*]}; i++)); do
+		ciphers_show=&quot;${ciphers[$i - 1]}&quot;
+		echo
+		echo -e &quot;$yellow $i. $none${ciphers_show}&quot;
+	done
+	echo
+	read -p &quot;$(echo -e &quot;(默认加密协议: ${cyan}${ciphers[6]}$none)&quot;):&quot; ssciphers_opt
+	[ -z &quot;$ssciphers_opt&quot; ] &amp;&amp; ssciphers_opt=7
+	case $ssciphers_opt in
+	[1-7])
+		ssciphers=${ciphers[$ssciphers_opt - 1]}
+		echo
+		echo
+		echo -e &quot;$yellow Shadowsocks 加密协议 = $cyan${ssciphers}$none&quot;
+		echo &quot;----------------------------------------------------------------&quot;
+		echo
+		break
+		;;
+	*)
+		error
+		;;
+	esac
+
+done
+pause
+</code></pre>
+<p>}</p>
+<p>install_info() {
+clear
+echo
+echo &quot; ....准备安装了咯..看看有毛有配置正确了...&quot;
+echo
+echo &quot;---------- 安装信息 -------------&quot;
+echo
+echo -e &quot;$yellow V2Ray 传输协议 = <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>c</mi><mi>y</mi><mi>a</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">cyan</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit">c</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">a</span><span class="mord mathit">n</span></span></span></span>{transport[v2ray_transport_opt - 1]}none&quot;</p>
+<pre><code>if [[ $v2ray_transport_opt == &quot;4&quot; || $v2ray_transport_opt == 16 ]]; then
+	echo
+	echo -e &quot;$yellow V2Ray 端口 = $cyan$v2ray_port$none&quot;
+	echo
+	echo -e &quot;$yellow 你的域名 = $cyan$domain$none&quot;
+	echo
+	echo -e &quot;$yellow 域名解析 = ${cyan}我确定已经有解析了$none&quot;
+	echo
+	echo -e &quot;$yellow 自动配置 TLS = $cyan$install_caddy_info$none&quot;
+
+	if [[ $is_blocked_ad ]]; then
+		echo
+		echo -e &quot;$yellow 广告拦截 = $cyan$blocked_ad_info$none&quot;
+	fi
+	if [[ $path ]]; then
+		echo
+		echo -e &quot;$yellow 路径分流 = ${cyan}/${path}$none&quot;
+	fi
+elif [[ $v2ray_transport_opt -ge 9 &amp;&amp; $v2ray_transport_opt -le 15 ]]; then
+	echo
+	echo -e &quot;$yellow V2Ray 端口 = $cyan$v2ray_port$none&quot;
+	echo
+	echo -e &quot;$yellow V2Ray 动态端口范围 = $cyan${v2ray_dynamic_port_start_input} - ${v2ray_dynamic_port_end_input}$none&quot;
+
+	if [[ $is_blocked_ad ]]; then
+		echo
+		echo -e &quot;$yellow 广告拦截 = $cyan$blocked_ad_info$none&quot;
+	fi
+elif [[ $v2ray_transport_opt == 17 ]]; then
+	echo
+	echo -e &quot;$yellow V2Ray 端口 = $cyan$v2ray_port$none&quot;
+	echo
+	echo -e &quot;$yellow 用户名 = $cyan$username$none&quot;
+	echo
+	echo -e &quot;$yellow 密码 = $cyan$userpass$none&quot;
+
+	if [[ $is_blocked_ad ]]; then
+		echo
+		echo -e &quot;$yellow 广告拦截 = $cyan$blocked_ad_info$none&quot;
+	fi
+else
+	echo
+	echo -e &quot;$yellow V2Ray 端口 = $cyan$v2ray_port$none&quot;
+
+	if [[ $is_blocked_ad ]]; then
+		echo
+		echo -e &quot;$yellow 广告拦截 = $cyan$blocked_ad_info$none&quot;
+	fi
+fi
+if [ $shadowsocks ]; then
+	echo
+	echo -e &quot;$yellow Shadowsocks 端口 = $cyan$ssport$none&quot;
+	echo
+	echo -e &quot;$yellow Shadowsocks 密码 = $cyan$sspass$none&quot;
+	echo
+	echo -e &quot;$yellow Shadowsocks 加密协议 = $cyan${ssciphers}$none&quot;
+else
+	echo
+	echo -e &quot;$yellow 是否配置 Shadowsocks = ${cyan}未配置${none}&quot;
+fi
+echo
+echo &quot;---------- END -------------&quot;
+echo
+pause
+echo
+</code></pre>
+<p>}</p>
+<p>domain_check() {
+# if [[ $cmd == &quot;yum&quot; ]]; then
+# 	yum install bind-utils -y
+# else
+# 	cmd install dnsutils -y
+	# fi
+	# test_domain=(dig <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi><mi>o</mi><mi>m</mi><mi>a</mi><mi>i</mi><mi>n</mi><mo>+</mo><mi>s</mi><mi>h</mi><mi>o</mi><mi>r</mi><mi>t</mi><mo>)</mo><mi>t</mi><mi>e</mi><mi>s</mi><msub><mi>t</mi><mi>d</mi></msub><mi>o</mi><mi>m</mi><mi>a</mi><mi>i</mi><mi>n</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">domain +short)
+	test_domain=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit">d</span><span class="mord mathit">o</span><span class="mord mathit">m</span><span class="mord mathit">a</span><span class="mord mathit">i</span><span class="mord mathit">n</span><span class="mbin">+</span><span class="mord mathit">s</span><span class="mord mathit">h</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">t</span><span class="mclose">)</span><span class="mord mathit">t</span><span class="mord mathit">e</span><span class="mord mathit">s</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">d</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">o</span><span class="mord mathit">m</span><span class="mord mathit">a</span><span class="mord mathit">i</span><span class="mord mathit">n</span><span class="mrel">=</span></span></span></span>(ping $domain -c 1 | grep -oE -m1 &quot;([0-9]{1,3}.){3}[0-9]{1,3}&quot;)
+if [[ $test_domain != <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>i</mi><mi>p</mi><mo>]</mo><mo>]</mo><mo separator="true">;</mo><mi>t</mi><mi>h</mi><mi>e</mi><mi>n</mi><mi>e</mi><mi>c</mi><mi>h</mi><mi>o</mi><mi>e</mi><mi>c</mi><mi>h</mi><mi>o</mi><mo>−</mo><mi>e</mi><mi mathvariant="normal">&quot;</mi></mrow><annotation encoding="application/x-tex">ip ]]; then
+		echo
+		echo -e &quot;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit">i</span><span class="mord mathit">p</span><span class="mclose">]</span><span class="mclose">]</span><span class="mpunct">;</span><span class="mord mathit">t</span><span class="mord mathit">h</span><span class="mord mathit">e</span><span class="mord mathit">n</span><span class="mord mathit">e</span><span class="mord mathit">c</span><span class="mord mathit">h</span><span class="mord mathit">o</span><span class="mord mathit">e</span><span class="mord mathit">c</span><span class="mord mathit">h</span><span class="mord mathit">o</span><span class="mbin">−</span><span class="mord mathit">e</span><span class="mord mathrm">&quot;</span></span></span></span>red 检测域名解析错误....$none&quot;
+echo
+echo -e &quot; 你的域名: <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>y</mi><mi>e</mi><mi>l</mi><mi>l</mi><mi>o</mi><mi>w</mi></mrow><annotation encoding="application/x-tex">yellow</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">e</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02691em;">w</span></span></span></span>domain$none 未解析到: <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>c</mi><mi>y</mi><mi>a</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">cyan</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit">c</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">a</span><span class="mord mathit">n</span></span></span></span>ip$none&quot;
+echo
+echo -e &quot; 你的域名当前解析到: <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>c</mi><mi>y</mi><mi>a</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">cyan</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.43056em;"></span><span class="strut bottom" style="height:0.625em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit">c</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">a</span><span class="mord mathit">n</span></span></span></span>test_domain$none&quot;
+echo
+echo &quot;备注...如果你的域名是使用 Cloudflare 解析的话..在 Status 那里点一下那图标..让它变灰&quot;
+echo
+exit 1
+fi
+}</p>
+<p>install_caddy() {
+local caddy_tmp=&quot;/tmp/install_caddy/&quot;
+local caddy_tmp_file=&quot;/tmp/install_caddy/caddy.tar.gz&quot;
+if [[ $sys_bit == &quot;i386&quot; || $sys_bit == &quot;i686&quot; ]]; then
+local caddy_download_link=&quot;https://caddyserver.com/download/linux/386?license=personal&quot;
+elif [[ <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mi>y</mi><msub><mi>s</mi><mi>b</mi></msub><mi>i</mi><mi>t</mi><mo>=</mo><mo>=</mo><mi mathvariant="normal">&quot;</mi><mi>x</mi><mn>8</mn><msub><mn>6</mn><mn>6</mn></msub><mn>4</mn><mi mathvariant="normal">&quot;</mi><mo>]</mo><mo>]</mo><mo separator="true">;</mo><mi>t</mi><mi>h</mi><mi>e</mi><mi>n</mi><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi><mi>c</mi><mi>a</mi><mi>d</mi><mi>d</mi><msub><mi>y</mi><mi>d</mi></msub><mi>o</mi><mi>w</mi><mi>n</mi><mi>l</mi><mi>o</mi><mi>a</mi><msub><mi>d</mi><mi>l</mi></msub><mi>i</mi><mi>n</mi><mi>k</mi><mo>=</mo><mi mathvariant="normal">&quot;</mi><mi>h</mi><mi>t</mi><mi>t</mi><mi>p</mi><mi>s</mi><mo>:</mo><mi mathvariant="normal">/</mi><mi mathvariant="normal">/</mi><mi>c</mi><mi>a</mi><mi>d</mi><mi>d</mi><mi>y</mi><mi>s</mi><mi>e</mi><mi>r</mi><mi>v</mi><mi>e</mi><mi>r</mi><mi mathvariant="normal">.</mi><mi>c</mi><mi>o</mi><mi>m</mi><mi mathvariant="normal">/</mi><mi>d</mi><mi>o</mi><mi>w</mi><mi>n</mi><mi>l</mi><mi>o</mi><mi>a</mi><mi>d</mi><mi mathvariant="normal">/</mi><mi>l</mi><mi>i</mi><mi>n</mi><mi>u</mi><mi>x</mi><mi mathvariant="normal">/</mi><mi>a</mi><mi>m</mi><mi>d</mi><mn>6</mn><mn>4</mn><mo>?</mo><mi>l</mi><mi>i</mi><mi>c</mi><mi>e</mi><mi>n</mi><mi>s</mi><mi>e</mi><mo>=</mo><mi>p</mi><mi>e</mi><mi>r</mi><mi>s</mi><mi>o</mi><mi>n</mi><mi>a</mi><mi>l</mi><mi mathvariant="normal">&quot;</mi><mi>e</mi><mi>l</mi><mi>s</mi><mi>e</mi><mi>e</mi><mi>c</mi><mi>h</mi><mi>o</mi><mo>−</mo><mi>e</mi><mi mathvariant="normal">&quot;</mi></mrow><annotation encoding="application/x-tex">sys_bit == &quot;x86_64&quot; ]]; then
+		local caddy_download_link=&quot;https://caddyserver.com/download/linux/amd64?license=personal&quot;
+	else
+		echo -e &quot;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit">s</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord"><span class="mord mathit">s</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">b</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">i</span><span class="mord mathit">t</span><span class="mrel">=</span><span class="mrel">=</span><span class="mord mathrm">&quot;</span><span class="mord mathit">x</span><span class="mord mathrm">8</span><span class="mord"><span class="mord mathrm">6</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathrm">6</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathrm">4</span><span class="mord mathrm">&quot;</span><span class="mclose">]</span><span class="mclose">]</span><span class="mpunct">;</span><span class="mord mathit">t</span><span class="mord mathit">h</span><span class="mord mathit">e</span><span class="mord mathit">n</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit">c</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">c</span><span class="mord mathit">a</span><span class="mord mathit">d</span><span class="mord mathit">d</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">d</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="mord mathit">n</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit">a</span><span class="mord"><span class="mord mathit">d</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit" style="margin-right:0.01968em;">l</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">i</span><span class="mord mathit">n</span><span class="mord mathit" style="margin-right:0.03148em;">k</span><span class="mrel">=</span><span class="mord mathrm">&quot;</span><span class="mord mathit">h</span><span class="mord mathit">t</span><span class="mord mathit">t</span><span class="mord mathit">p</span><span class="mord mathit">s</span><span class="mrel">:</span><span class="mord mathrm">/</span><span class="mord mathrm">/</span><span class="mord mathit">c</span><span class="mord mathit">a</span><span class="mord mathit">d</span><span class="mord mathit">d</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">s</span><span class="mord mathit">e</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit" style="margin-right:0.03588em;">v</span><span class="mord mathit">e</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathrm">.</span><span class="mord mathit">c</span><span class="mord mathit">o</span><span class="mord mathit">m</span><span class="mord mathrm">/</span><span class="mord mathit">d</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="mord mathit">n</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit">a</span><span class="mord mathit">d</span><span class="mord mathrm">/</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">i</span><span class="mord mathit">n</span><span class="mord mathit">u</span><span class="mord mathit">x</span><span class="mord mathrm">/</span><span class="mord mathit">a</span><span class="mord mathit">m</span><span class="mord mathit">d</span><span class="mord mathrm">6</span><span class="mord mathrm">4</span><span class="mclose">?</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">i</span><span class="mord mathit">c</span><span class="mord mathit">e</span><span class="mord mathit">n</span><span class="mord mathit">s</span><span class="mord mathit">e</span><span class="mrel">=</span><span class="mord mathit">p</span><span class="mord mathit">e</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">s</span><span class="mord mathit">o</span><span class="mord mathit">n</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathrm">&quot;</span><span class="mord mathit">e</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">s</span><span class="mord mathit">e</span><span class="mord mathit">e</span><span class="mord mathit">c</span><span class="mord mathit">h</span><span class="mord mathit">o</span><span class="mbin">−</span><span class="mord mathit">e</span><span class="mord mathrm">&quot;</span></span></span></span>red 自动安装 Caddy 失败！不支持你的系统。$none&quot; &amp;&amp; exit 1
+fi</p>
+<pre><code>mkdir -p $caddy_tmp
+
+if ! wget --no-check-certificate -O &quot;$caddy_tmp_file&quot; $caddy_download_link; then
+	echo -e &quot;$red 下载 Caddy 失败！$none&quot; &amp;&amp; exit 1
+fi
+
+tar zxf $caddy_tmp_file -C $caddy_tmp
+cp -f ${caddy_tmp}caddy /usr/local/bin/
+
+if [[ ! -f /usr/local/bin/caddy ]]; then
+	echo -e &quot;$red 安装 Caddy 出错！&quot; &amp;&amp; exit 1
+fi
+
+setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/caddy
+
+if [[ $systemd ]]; then
+	cp -f ${caddy_tmp}init/linux-systemd/caddy.service /lib/systemd/system/
+	# sed -i &quot;s/www-data/root/g&quot; /lib/systemd/system/caddy.service
+	sed -i &quot;s/on-failure/always/&quot; /lib/systemd/system/caddy.service
+	systemctl enable caddy
+else
+	cp -f ${caddy_tmp}init/linux-sysvinit/caddy /etc/init.d/caddy
+	# sed -i &quot;s/www-data/root/g&quot; /etc/init.d/caddy
+	chmod +x /etc/init.d/caddy
+	update-rc.d -f caddy defaults
+fi
+
+mkdir -p /etc/ssl/caddy
+
+if [ -z &quot;$(grep www-data /etc/passwd)&quot; ]; then
+	useradd -M -s /usr/sbin/nologin www-data
+fi
+chown -R www-data.www-data /etc/ssl/caddy
+
+mkdir -p /etc/caddy/
+rm -rf $caddy_tmp
+caddy_config
+</code></pre>
+<p>}
+caddy_config() {
+# local email=<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>(</mo><mi>s</mi><mi>h</mi><mi>u</mi><mi>f</mi><mo>−</mo><mi>i</mi><mn>1</mn><mo>−</mo><mn>1</mn><mn>0</mn><mn>0</mn><mn>0</mn><mn>0</mn><mn>0</mn><mn>0</mn><mn>0</mn><mn>0</mn><mn>0</mn><mn>0</mn><mo>−</mo><mi>n</mi><mn>1</mn><mo>)</mo><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi><mi>e</mi><mi>m</mi><mi>a</mi><mi>i</mi><mi>l</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">(shuf -i1-10000000000 -n1)
+	local email=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mopen">(</span><span class="mord mathit">s</span><span class="mord mathit">h</span><span class="mord mathit">u</span><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="mbin">−</span><span class="mord mathit">i</span><span class="mord mathrm">1</span><span class="mbin">−</span><span class="mord mathrm">1</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathit">n</span><span class="mord mathrm">1</span><span class="mclose">)</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit">c</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">e</span><span class="mord mathit">m</span><span class="mord mathit">a</span><span class="mord mathit">i</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mrel">=</span></span></span></span>(((RANDOM &lt;&lt; 22)))
+case $v2ray_transport_opt in
+4)
+if [[ <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>p</mi><mi>a</mi><mi>t</mi><mi>h</mi><mo>]</mo><mo>]</mo><mo separator="true">;</mo><mi>t</mi><mi>h</mi><mi>e</mi><mi>n</mi><mi>c</mi><mi>a</mi><mi>t</mi><mo>&gt;</mo><mi mathvariant="normal">/</mi><mi>e</mi><mi>t</mi><mi>c</mi><mi mathvariant="normal">/</mi><mi>c</mi><mi>a</mi><mi>d</mi><mi>d</mi><mi>y</mi><mi mathvariant="normal">/</mi><mi>C</mi><mi>a</mi><mi>d</mi><mi>d</mi><mi>y</mi><mi>f</mi><mi>i</mi><mi>l</mi><mi>e</mi><mo>&lt;</mo><mo>&lt;</mo><mo>−</mo><mi>E</mi><mi>O</mi><mi>F</mi></mrow><annotation encoding="application/x-tex">path ]]; then
+			cat &gt;/etc/caddy/Caddyfile &lt;&lt;-EOF
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit">p</span><span class="mord mathit">a</span><span class="mord mathit">t</span><span class="mord mathit">h</span><span class="mclose">]</span><span class="mclose">]</span><span class="mpunct">;</span><span class="mord mathit">t</span><span class="mord mathit">h</span><span class="mord mathit">e</span><span class="mord mathit">n</span><span class="mord mathit">c</span><span class="mord mathit">a</span><span class="mord mathit">t</span><span class="mrel">&gt;</span><span class="mord mathrm">/</span><span class="mord mathit">e</span><span class="mord mathit">t</span><span class="mord mathit">c</span><span class="mord mathrm">/</span><span class="mord mathit">c</span><span class="mord mathit">a</span><span class="mord mathit">d</span><span class="mord mathit">d</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathrm">/</span><span class="mord mathit" style="margin-right:0.07153em;">C</span><span class="mord mathit">a</span><span class="mord mathit">d</span><span class="mord mathit">d</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="mord mathit">i</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">e</span><span class="mrel">&lt;</span><span class="mrel">&lt;</span><span class="mord">−</span><span class="mord mathit" style="margin-right:0.05764em;">E</span><span class="mord mathit" style="margin-right:0.02778em;">O</span><span class="mord mathit" style="margin-right:0.13889em;">F</span></span></span></span>domain {
+tls ${email}@gmail.com
+gzip
+timeouts none
+proxy / proxy_site {
+        without /{path}
+}
+proxy /<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi>p</mi><mi>a</mi><mi>t</mi><mi>h</mi></mrow><mn>1</mn><mn>2</mn><mn>7</mn><mi mathvariant="normal">.</mi><mn>0</mn><mi mathvariant="normal">.</mi><mn>0</mn><mi mathvariant="normal">.</mi><mn>1</mn><mo>:</mo></mrow><annotation encoding="application/x-tex">{path} 127.0.0.1:</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathit">p</span><span class="mord mathit">a</span><span class="mord mathit">t</span><span class="mord mathit">h</span></span><span class="mord mathrm">1</span><span class="mord mathrm">2</span><span class="mord mathrm">7</span><span class="mord mathrm">.</span><span class="mord mathrm">0</span><span class="mord mathrm">.</span><span class="mord mathrm">0</span><span class="mord mathrm">.</span><span class="mord mathrm">1</span><span class="mrel">:</span></span></span></span>{v2ray_port} {
+without /{path}
+        websocket
+    }
+}
+		EOF
+		else
+			cat >/etc/caddy/Caddyfile <<-EOF
+domain {
+tls <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi>e</mi><mi>m</mi><mi>a</mi><mi>i</mi><mi>l</mi></mrow><mi mathvariant="normal">@</mi><mi>g</mi><mi>m</mi><mi>a</mi><mi>i</mi><mi>l</mi><mi mathvariant="normal">.</mi><mi>c</mi><mi>o</mi><mi>m</mi><mi>t</mi><mi>i</mi><mi>m</mi><mi>e</mi><mi>o</mi><mi>u</mi><mi>t</mi><mi>s</mi><mi>n</mi><mi>o</mi><mi>n</mi><mi>e</mi><mi>p</mi><mi>r</mi><mi>o</mi><mi>x</mi><mi>y</mi><mi mathvariant="normal">/</mi><mn>1</mn><mn>2</mn><mn>7</mn><mi mathvariant="normal">.</mi><mn>0</mn><mi mathvariant="normal">.</mi><mn>0</mn><mi mathvariant="normal">.</mi><mn>1</mn><mo>:</mo></mrow><annotation encoding="application/x-tex">{email}@gmail.com
+	timeouts none
+	proxy / 127.0.0.1:</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathit">e</span><span class="mord mathit">m</span><span class="mord mathit">a</span><span class="mord mathit">i</span><span class="mord mathit" style="margin-right:0.01968em;">l</span></span><span class="mord mathrm">@</span><span class="mord mathit" style="margin-right:0.03588em;">g</span><span class="mord mathit">m</span><span class="mord mathit">a</span><span class="mord mathit">i</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathrm">.</span><span class="mord mathit">c</span><span class="mord mathit">o</span><span class="mord mathit">m</span><span class="mord mathit">t</span><span class="mord mathit">i</span><span class="mord mathit">m</span><span class="mord mathit">e</span><span class="mord mathit">o</span><span class="mord mathit">u</span><span class="mord mathit">t</span><span class="mord mathit">s</span><span class="mord mathit">n</span><span class="mord mathit">o</span><span class="mord mathit">n</span><span class="mord mathit">e</span><span class="mord mathit">p</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">o</span><span class="mord mathit">x</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathrm">/</span><span class="mord mathrm">1</span><span class="mord mathrm">2</span><span class="mord mathrm">7</span><span class="mord mathrm">.</span><span class="mord mathrm">0</span><span class="mord mathrm">.</span><span class="mord mathrm">0</span><span class="mord mathrm">.</span><span class="mord mathrm">1</span><span class="mrel">:</span></span></span></span>{v2ray_port} {
+websocket
+}
+}
+EOF
+fi
+;;
+16)
+if [[ <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>p</mi><mi>a</mi><mi>t</mi><mi>h</mi><mo>]</mo><mo>]</mo><mo separator="true">;</mo><mi>t</mi><mi>h</mi><mi>e</mi><mi>n</mi><mi>c</mi><mi>a</mi><mi>t</mi><mo>&gt;</mo><mi mathvariant="normal">/</mi><mi>e</mi><mi>t</mi><mi>c</mi><mi mathvariant="normal">/</mi><mi>c</mi><mi>a</mi><mi>d</mi><mi>d</mi><mi>y</mi><mi mathvariant="normal">/</mi><mi>C</mi><mi>a</mi><mi>d</mi><mi>d</mi><mi>y</mi><mi>f</mi><mi>i</mi><mi>l</mi><mi>e</mi><mo>&lt;</mo><mo>&lt;</mo><mo>−</mo><mi>E</mi><mi>O</mi><mi>F</mi></mrow><annotation encoding="application/x-tex">path ]]; then
+			cat &gt;/etc/caddy/Caddyfile &lt;&lt;-EOF
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit">p</span><span class="mord mathit">a</span><span class="mord mathit">t</span><span class="mord mathit">h</span><span class="mclose">]</span><span class="mclose">]</span><span class="mpunct">;</span><span class="mord mathit">t</span><span class="mord mathit">h</span><span class="mord mathit">e</span><span class="mord mathit">n</span><span class="mord mathit">c</span><span class="mord mathit">a</span><span class="mord mathit">t</span><span class="mrel">&gt;</span><span class="mord mathrm">/</span><span class="mord mathit">e</span><span class="mord mathit">t</span><span class="mord mathit">c</span><span class="mord mathrm">/</span><span class="mord mathit">c</span><span class="mord mathit">a</span><span class="mord mathit">d</span><span class="mord mathit">d</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathrm">/</span><span class="mord mathit" style="margin-right:0.07153em;">C</span><span class="mord mathit">a</span><span class="mord mathit">d</span><span class="mord mathit">d</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="mord mathit">i</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">e</span><span class="mrel">&lt;</span><span class="mrel">&lt;</span><span class="mord">−</span><span class="mord mathit" style="margin-right:0.05764em;">E</span><span class="mord mathit" style="margin-right:0.02778em;">O</span><span class="mord mathit" style="margin-right:0.13889em;">F</span></span></span></span>domain {
+tls ${email}@gmail.com
+gzip
+timeouts none
+proxy / proxy_site {
+        without /{path}
+}
+proxy /<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi>p</mi><mi>a</mi><mi>t</mi><mi>h</mi></mrow><mi>h</mi><mi>t</mi><mi>t</mi><mi>p</mi><mi>s</mi><mo>:</mo><mi mathvariant="normal">/</mi><mi mathvariant="normal">/</mi><mn>1</mn><mn>2</mn><mn>7</mn><mi mathvariant="normal">.</mi><mn>0</mn><mi mathvariant="normal">.</mi><mn>0</mn><mi mathvariant="normal">.</mi><mn>1</mn><mo>:</mo></mrow><annotation encoding="application/x-tex">{path} https://127.0.0.1:</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathit">p</span><span class="mord mathit">a</span><span class="mord mathit">t</span><span class="mord mathit">h</span></span><span class="mord mathit">h</span><span class="mord mathit">t</span><span class="mord mathit">t</span><span class="mord mathit">p</span><span class="mord mathit">s</span><span class="mrel">:</span><span class="mord mathrm">/</span><span class="mord mathrm">/</span><span class="mord mathrm">1</span><span class="mord mathrm">2</span><span class="mord mathrm">7</span><span class="mord mathrm">.</span><span class="mord mathrm">0</span><span class="mord mathrm">.</span><span class="mord mathrm">0</span><span class="mord mathrm">.</span><span class="mord mathrm">1</span><span class="mrel">:</span></span></span></span>{v2ray_port} {
+header_upstream Host {host}
+header_upstream X-Forwarded-Proto {scheme}
+insecure_skip_verify
+}
+}
+EOF
+else
+cat &gt;/etc/caddy/Caddyfile &lt;&lt;-EOF
+$domain {
+tls <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi>e</mi><mi>m</mi><mi>a</mi><mi>i</mi><mi>l</mi></mrow><mi mathvariant="normal">@</mi><mi>g</mi><mi>m</mi><mi>a</mi><mi>i</mi><mi>l</mi><mi mathvariant="normal">.</mi><mi>c</mi><mi>o</mi><mi>m</mi><mi>t</mi><mi>i</mi><mi>m</mi><mi>e</mi><mi>o</mi><mi>u</mi><mi>t</mi><mi>s</mi><mi>n</mi><mi>o</mi><mi>n</mi><mi>e</mi><mi>p</mi><mi>r</mi><mi>o</mi><mi>x</mi><mi>y</mi><mi mathvariant="normal">/</mi><mi>h</mi><mi>t</mi><mi>t</mi><mi>p</mi><mi>s</mi><mo>:</mo><mi mathvariant="normal">/</mi><mi mathvariant="normal">/</mi><mn>1</mn><mn>2</mn><mn>7</mn><mi mathvariant="normal">.</mi><mn>0</mn><mi mathvariant="normal">.</mi><mn>0</mn><mi mathvariant="normal">.</mi><mn>1</mn><mo>:</mo></mrow><annotation encoding="application/x-tex">{email}@gmail.com
+	timeouts none
+	proxy / https://127.0.0.1:</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathit">e</span><span class="mord mathit">m</span><span class="mord mathit">a</span><span class="mord mathit">i</span><span class="mord mathit" style="margin-right:0.01968em;">l</span></span><span class="mord mathrm">@</span><span class="mord mathit" style="margin-right:0.03588em;">g</span><span class="mord mathit">m</span><span class="mord mathit">a</span><span class="mord mathit">i</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathrm">.</span><span class="mord mathit">c</span><span class="mord mathit">o</span><span class="mord mathit">m</span><span class="mord mathit">t</span><span class="mord mathit">i</span><span class="mord mathit">m</span><span class="mord mathit">e</span><span class="mord mathit">o</span><span class="mord mathit">u</span><span class="mord mathit">t</span><span class="mord mathit">s</span><span class="mord mathit">n</span><span class="mord mathit">o</span><span class="mord mathit">n</span><span class="mord mathit">e</span><span class="mord mathit">p</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">o</span><span class="mord mathit">x</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathrm">/</span><span class="mord mathit">h</span><span class="mord mathit">t</span><span class="mord mathit">t</span><span class="mord mathit">p</span><span class="mord mathit">s</span><span class="mrel">:</span><span class="mord mathrm">/</span><span class="mord mathrm">/</span><span class="mord mathrm">1</span><span class="mord mathrm">2</span><span class="mord mathrm">7</span><span class="mord mathrm">.</span><span class="mord mathrm">0</span><span class="mord mathrm">.</span><span class="mord mathrm">0</span><span class="mord mathrm">.</span><span class="mord mathrm">1</span><span class="mrel">:</span></span></span></span>{v2ray_port} {
+header_upstream Host {host}
+header_upstream X-Forwarded-Proto {scheme}
+insecure_skip_verify
+}
+}
+EOF
+fi
+;;</p>
+<pre><code>esac
+
+# systemctl restart caddy
+do_service restart caddy
+</code></pre>
+<p>}</p>
+<p>install_v2ray() {
+$cmd update -y
+# if [[ $cmd == &quot;apt-get&quot; ]]; then
+# 	$cmd install -y lrzsz git zip unzip curl wget qrencode dnsutils
+# else
+# 	$cmd install -y lrzsz git zip unzip curl wget qrencode bind-utils iptables-services
+# fi
+if [[ $cmd == &quot;apt-get&quot; ]]; then
+$cmd install -y lrzsz git zip unzip curl wget qrencode libcap2-bin ntpdate
+else
+$cmd install -y lrzsz git zip unzip curl wget qrencode libcap iptables-services ntpdate
+fi
+ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+[ -d /etc/v2ray ] &amp;&amp; rm -rf /etc/v2ray
+ntpdate -u cn.pool.ntp.org</p>
+<pre><code>if [[ $local_install ]]; then
+	if [[ ! -d $(pwd)/config ]]; then
+		echo
+		echo -e &quot;$red 哎呀呀...安装失败了咯...$none&quot;
+		echo
+		echo -e &quot; 请确保你有完整的上传 v2ray66.com 的 V2Ray 一键安装脚本 &amp; 管理脚本到当前 ${green}$(pwd) $none目录下&quot;
+		echo
+		exit 1
+	fi
+	mkdir -p /etc/v2ray/233boy/v2ray
+	cp -rf $(pwd)/* /etc/v2ray/233boy/v2ray
+else
+	git clone https://github.com/233boy/v2ray /etc/v2ray/233boy/v2ray
+fi
+
+if [[ ! -d /etc/v2ray/233boy/v2ray ]]; then
+	echo
+	echo -e &quot;$red 哎呀呀...克隆脚本仓库出错了...$none&quot;
+	echo
+	echo -e &quot; 温馨提示..... 请尝试自行安装 Git: ${green}$cmd install -y git $none 之后再安装此脚本&quot;
+	echo
+	exit 1
+fi
+
+[ -d /tmp/v2ray ] &amp;&amp; rm -rf /tmp/v2ray
+mkdir -p /tmp/v2ray
+
+v2ray_tmp_file=&quot;/tmp/v2ray/v2ray.zip&quot;
+v2ray_ver=&quot;$(curl -H 'Cache-Control: no-cache' -s https://api.github.com/repos/v2ray/v2ray-core/releases/latest | grep 'tag_name' | cut -d\&quot; -f4)&quot;
+
+if [[ ! $v2ray_ver ]]; then
+	echo
+	echo -e &quot; $red获取 V2Ray 最新版本失败!!!$none&quot;
+	echo
+	echo -e &quot; 请尝试执行如下命令: $green echo 'nameserver 8.8.8.8' &gt;/etc/resolv.conf $none&quot;
+	echo
+	echo &quot; 然后再继续安装脚本....&quot;
+	echo
+	exit 1
+fi
+
+v2ray_download_link=&quot;https://github.com/v2ray/v2ray-core/releases/download/$v2ray_ver/v2ray-linux-${v2ray_bit}.zip&quot;
+
+if ! wget --no-check-certificate -O &quot;$v2ray_tmp_file&quot; $v2ray_download_link; then
+	echo -e &quot;
+    $red 下载 V2Ray 失败啦..可能是你的小鸡鸡的网络太辣鸡了...重新安装也许能解决$none
+    &quot; &amp;&amp; exit 1
+fi
+
+unzip $v2ray_tmp_file -d &quot;/tmp/v2ray/&quot;
+mkdir -p /usr/bin/v2ray
+cp -f &quot;/tmp/v2ray/v2ray&quot; &quot;/usr/bin/v2ray/v2ray&quot;
+chmod +x &quot;/usr/bin/v2ray/v2ray&quot;
+cp -f &quot;/tmp/v2ray/v2ctl&quot; &quot;/usr/bin/v2ray/v2ctl&quot;
+chmod +x &quot;/usr/bin/v2ray/v2ctl&quot;
+
+if [[ $systemd ]]; then
+	cp -f &quot;/tmp/v2ray/systemd/v2ray.service&quot; &quot;/lib/systemd/system/&quot;
+	sed -i &quot;s/on-failure/always/&quot; /lib/systemd/system/v2ray.service
+	systemctl enable v2ray
+else
+	apt-get install -y daemon
+	cp &quot;/tmp/v2ray/systemv/v2ray&quot; &quot;/etc/init.d/v2ray&quot;
+	chmod +x &quot;/etc/init.d/v2ray&quot;
+	update-rc.d -f v2ray defaults
+fi
+
+mkdir -p /var/log/v2ray
+mkdir -p /etc/v2ray
+
+rm -rf /tmp/v2ray
+
+if [ $shadowsocks ]; then
+	if [[ $is_blocked_ad ]]; then
+		case $v2ray_transport_opt in
+		1)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/server/tcp_ss.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/tcp.json&quot;
+			;;
+		2)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/server/http_ss.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/http.json&quot;
+			;;
+		3)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/server/ws_ss.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/ws.json&quot;
+			;;
+		4)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/server/ws_ss.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/ws_tls.json&quot;
+			;;
+		5 | 6 | 7 | 8)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/server/kcp_ss.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/kcp.json&quot;
+			;;
+		9)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/server/tcp_ss_dynamic.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/tcp.json&quot;
+			;;
+		10)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/server/http_ss_dynamic.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/http.json&quot;
+			;;
+		11)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/server/ws_ss_dynamic.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/ws.json&quot;
+			;;
+		12 | 13 | 14 | 15)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/server/kcp_ss_dynamic.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/kcp.json&quot;
+			;;
+		16)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/server/h2_ss.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/h2.json&quot;
+			;;
+		17)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/server/socks_ss.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/socks.json&quot;
+			;;
+		esac
+	else
+		case $v2ray_transport_opt in
+		1)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/tcp_ss.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/tcp.json&quot;
+			;;
+		2)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/http_ss.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/http.json&quot;
+			;;
+		3)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/ws_ss.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/ws.json&quot;
+			;;
+		4)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/ws_ss.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/ws_tls.json&quot;
+			;;
+		5 | 6 | 7 | 8)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/kcp_ss.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/kcp.json&quot;
+			;;
+		9)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/tcp_ss_dynamic.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/tcp.json&quot;
+			;;
+		10)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/http_ss_dynamic.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/http.json&quot;
+			;;
+		11)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/ws_ss_dynamic.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/ws.json&quot;
+			;;
+		12 | 13 | 14 | 15)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/kcp_ss_dynamic.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/kcp.json&quot;
+			;;
+		16)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/h2_ss.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/h2.json&quot;
+			;;
+		17)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/socks_ss.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/socks.json&quot;
+			;;
+		esac
+	fi
+else
+	if [[ $is_blocked_ad ]]; then
+		case $v2ray_transport_opt in
+		1)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/server/tcp.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/tcp.json&quot;
+			;;
+		2)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/server/http.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/http.json&quot;
+			;;
+		3)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/server/ws.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/ws.json&quot;
+			;;
+		4)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/server/ws.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/ws_tls.json&quot;
+			;;
+		5 | 6 | 7 | 8)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/server/kcp.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/kcp.json&quot;
+			;;
+		9)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/erver/tcp_dynamic.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/tcp.json&quot;
+			;;
+		10)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/server/http_dynamic.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/http.json&quot;
+			;;
+		11)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/server/ws_dynamic.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/ws.json&quot;
+			;;
+		12 | 13 | 14 | 15)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/server/kcp_dynamic.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/kcp.json&quot;
+			;;
+		16)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/server/h2.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/h2.json&quot;
+			;;
+		17)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/blocked_hosts/server/socks.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/socks.json&quot;
+			;;
+		esac
+	else
+		case $v2ray_transport_opt in
+		1)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/tcp.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/tcp.json&quot;
+			;;
+		2)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/http.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/http.json&quot;
+			;;
+		3)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/ws.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/ws.json&quot;
+			;;
+		4)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/ws.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/ws_tls.json&quot;
+			;;
+		5 | 6 | 7 | 8)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/kcp.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/kcp.json&quot;
+			;;
+		9)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/tcp_dynamic.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/tcp.json&quot;
+			;;
+		10)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/http_dynamic.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/http.json&quot;
+			;;
+		11)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/ws_dynamic.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/ws.json&quot;
+			;;
+		12 | 13 | 14 | 15)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/kcp_dynamic.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/kcp.json&quot;
+			;;
+		16)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/h2.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/h2.json&quot;
+			;;
+		17)
+			v2ray_server_config_file=&quot;/etc/v2ray/233boy/v2ray/config/server/socks.json&quot;
+			v2ray_client_config_file=&quot;/etc/v2ray/233boy/v2ray/config/client/socks.json&quot;
+			;;
+		esac
+	fi
+
+fi
+</code></pre>
+<p>}</p>
+<p>open_port() {
+if [[ $1 != &quot;multiport&quot; ]]; then</p>
+<pre><code>	iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport $1 -j ACCEPT
+	iptables -I INPUT -m state --state NEW -m udp -p udp --dport $1 -j ACCEPT
+	ip6tables -I INPUT -m state --state NEW -m tcp -p tcp --dport $1 -j ACCEPT
+	ip6tables -I INPUT -m state --state NEW -m udp -p udp --dport $1 -j ACCEPT
+
+	# firewall-cmd --permanent --zone=public --add-port=$1/tcp
+	# firewall-cmd --permanent --zone=public --add-port=$1/udp
+	# firewall-cmd --reload
+
+else
+
+	local multiport=&quot;${v2ray_dynamic_port_start_input}:${v2ray_dynamic_port_end_input}&quot;
+	iptables -I INPUT -p tcp --match multiport --dports $multiport -j ACCEPT
+	iptables -I INPUT -p udp --match multiport --dports $multiport -j ACCEPT
+	ip6tables -I INPUT -p tcp --match multiport --dports $multiport -j ACCEPT
+	ip6tables -I INPUT -p udp --match multiport --dports $multiport -j ACCEPT
+
+	# local multi_port=&quot;${v2ray_dynamic_port_start_input}-${v2ray_dynamic_port_end_input}&quot;
+	# firewall-cmd --permanent --zone=public --add-port=$multi_port/tcp
+	# firewall-cmd --permanent --zone=public --add-port=$multi_port/udp
+	# firewall-cmd --reload
+
+fi
+if [[ $cmd == &quot;apt-get&quot; ]]; then
+	iptables-save &gt;/etc/iptables.rules.v4
+	ip6tables-save &gt;/etc/iptables.rules.v6
+else
+	service iptables save &gt;/dev/null 2&gt;&amp;1
+	service ip6tables save &gt;/dev/null 2&gt;&amp;1
+fi
+</code></pre>
+<p>}
+del_port() {
+if [[ $1 != &quot;multiport&quot; ]]; then
+# if [[ $cmd == &quot;apt-get&quot; ]]; then
+iptables -D INPUT -m state --state NEW -m tcp -p tcp --dport $1 -j ACCEPT
+iptables -D INPUT -m state --state NEW -m udp -p udp --dport $1 -j ACCEPT
+ip6tables -D INPUT -m state --state NEW -m tcp -p tcp --dport $1 -j ACCEPT
+ip6tables -D INPUT -m state --state NEW -m udp -p udp --dport $1 -j ACCEPT
+# else
+# 	firewall-cmd --permanent --zone=public --remove-port=$1/tcp
+# 	firewall-cmd --permanent --zone=public --remove-port=$1/udp
+# fi
+else
+# if [[ $cmd == &quot;apt-get&quot; ]]; then
+if [[ <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>v</mi><mn>2</mn><mi>r</mi><mi>a</mi><msub><mi>y</mi><mi>t</mi></msub><mi>r</mi><mi>a</mi><mi>n</mi><mi>s</mi><mi>p</mi><mi>o</mi><mi>r</mi><mi>t</mi><mo>]</mo><mo>]</mo><mo separator="true">;</mo><mi>t</mi><mi>h</mi><mi>e</mi><mi>n</mi><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi><mi>p</mi><mi>o</mi><mi>r</mi><mi>t</mi><mi>s</mi><mo>=</mo><mi mathvariant="normal">&quot;</mi></mrow><annotation encoding="application/x-tex">v2ray_transport ]]; then
+			local ports=&quot;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.03588em;">v</span><span class="mord mathrm">2</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">a</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">t</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">a</span><span class="mord mathit">n</span><span class="mord mathit">s</span><span class="mord mathit">p</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">t</span><span class="mclose">]</span><span class="mclose">]</span><span class="mpunct">;</span><span class="mord mathit">t</span><span class="mord mathit">h</span><span class="mord mathit">e</span><span class="mord mathit">n</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit">c</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">p</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">t</span><span class="mord mathit">s</span><span class="mrel">=</span><span class="mord mathrm">&quot;</span></span></span></span>{v2ray_dynamicPort_start}:<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi>v</mi><mn>2</mn><mi>r</mi><mi>a</mi><msub><mi>y</mi><mi>d</mi></msub><mi>y</mi><mi>n</mi><mi>a</mi><mi>m</mi><mi>i</mi><mi>c</mi><mi>P</mi><mi>o</mi><mi>r</mi><msub><mi>t</mi><mi>e</mi></msub><mi>n</mi><mi>d</mi></mrow><mi mathvariant="normal">&quot;</mi><mi>e</mi><mi>l</mi><mi>s</mi><mi>e</mi><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi><mi>p</mi><mi>o</mi><mi>r</mi><msub><mi>t</mi><mi>s</mi></msub><mi>t</mi><mi>a</mi><mi>r</mi><mi>t</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">{v2ray_dynamicPort_end}&quot;
+		else
+			local port_start=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathit" style="margin-right:0.03588em;">v</span><span class="mord mathrm">2</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">a</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">d</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">n</span><span class="mord mathit">a</span><span class="mord mathit">m</span><span class="mord mathit">i</span><span class="mord mathit">c</span><span class="mord mathit" style="margin-right:0.13889em;">P</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">e</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">n</span><span class="mord mathit">d</span></span><span class="mord mathrm">&quot;</span><span class="mord mathit">e</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">s</span><span class="mord mathit">e</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit">c</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">p</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">s</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">t</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">t</span><span class="mrel">=</span></span></span></span>(sed -n '23p' <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>b</mi><mi>a</mi><mi>c</mi><mi>k</mi><mi>u</mi><mi>p</mi><mo>)</mo><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi><mi>p</mi><mi>o</mi><mi>r</mi><msub><mi>t</mi><mi>e</mi></msub><mi>n</mi><mi>d</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">backup)
+			local port_end=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit">b</span><span class="mord mathit">a</span><span class="mord mathit">c</span><span class="mord mathit" style="margin-right:0.03148em;">k</span><span class="mord mathit">u</span><span class="mord mathit">p</span><span class="mclose">)</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit">c</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">p</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">e</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">n</span><span class="mord mathit">d</span><span class="mrel">=</span></span></span></span>(sed -n '25p' <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>b</mi><mi>a</mi><mi>c</mi><mi>k</mi><mi>u</mi><mi>p</mi><mo>)</mo><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><mi>l</mi><mi>p</mi><mi>o</mi><mi>r</mi><mi>t</mi><mi>s</mi><mo>=</mo><mi mathvariant="normal">&quot;</mi></mrow><annotation encoding="application/x-tex">backup)
+			local ports=&quot;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit">b</span><span class="mord mathit">a</span><span class="mord mathit">c</span><span class="mord mathit" style="margin-right:0.03148em;">k</span><span class="mord mathit">u</span><span class="mord mathit">p</span><span class="mclose">)</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit">c</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">p</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">t</span><span class="mord mathit">s</span><span class="mrel">=</span><span class="mord mathrm">&quot;</span></span></span></span>{port_start}:${port_end}&quot;
+fi</p>
+<pre><code>	iptables -D INPUT -p tcp --match multiport --dports $ports -j ACCEPT
+	iptables -D INPUT -p udp --match multiport --dports $ports -j ACCEPT
+	ip6tables -D INPUT -p tcp --match multiport --dports $ports -j ACCEPT
+	ip6tables -D INPUT -p udp --match multiport --dports $ports -j ACCEPT
+	# else
+	# 	local port_start=$(sed -n '23p' $backup)
+	# 	local port_end=$(sed -n '25p' $backup)
+	# 	local ports=&quot;${port_start}-${port_end}&quot;
+	# 	firewall-cmd --permanent --zone=public --remove-port=$ports/tcp
+	# 	firewall-cmd --permanent --zone=public --remove-port=$ports/udp
+	# fi
+fi
+
+if [[ $cmd == &quot;apt-get&quot; ]]; then
+	iptables-save &gt;/etc/iptables.rules.v4
+	ip6tables-save &gt;/etc/iptables.rules.v6
+else
+	service iptables save &gt;/dev/null 2&gt;&amp;1
+	service ip6tables save &gt;/dev/null 2&gt;&amp;1
+fi
+</code></pre>
+<p>}</p>
+<p>config() {
+cp -f $v2ray_server_config_file $v2ray_server_config
+cp -f $v2ray_client_config_file $v2ray_client_config
+cp -f /etc/v2ray/233boy/v2ray/config/backup.conf $backup
+cp -f /etc/v2ray/233boy/v2ray/v2ray.sh $_v2ray_sh
+chmod +x $_v2ray_sh</p>
+<pre><code>local multi_port=&quot;${v2ray_dynamic_port_start_input}-${v2ray_dynamic_port_end_input}&quot;
+if [ $shadowsocks ]; then
+	case $v2ray_transport_opt in
+	1)
+		sed -i &quot;28s/6666/$ssport/; 30s/chacha20-ietf/$ssciphers/; 31s/233blog.com/$sspass/&quot; $v2ray_server_config
+		;;
+	2)
+		sed -i &quot;64s/6666/$ssport/; 66s/chacha20-ietf/$ssciphers/; 67s/233blog.com/$sspass/&quot; $v2ray_server_config
+		;;
+	3 | 4)
+		sed -i &quot;31s/6666/$ssport/; 33s/chacha20-ietf/$ssciphers/; 34s/233blog.com/$sspass/&quot; $v2ray_server_config
+		;;
+	5 | 6 | 7 | 8)
+		sed -i &quot;43s/6666/$ssport/; 45s/chacha20-ietf/$ssciphers/; 46s/233blog.com/$sspass/&quot; $v2ray_server_config
+		;;
+	9)
+		sed -i &quot;31s/6666/$ssport/; 33s/chacha20-ietf/$ssciphers/; 34s/233blog.com/$sspass/; 42s/10000-20000/$multi_port/&quot; $v2ray_server_config
+		;;
+	10)
+		sed -i &quot;67s/6666/$ssport/; 69s/chacha20-ietf/$ssciphers/; 70s/233blog.com/$sspass/; 78s/10000-20000/$multi_port/&quot; $v2ray_server_config
+		;;
+	1[1-5])
+		sed -i &quot;34s/6666/$ssport/; 36s/chacha20-ietf/$ssciphers/; 37s/233blog.com/$sspass/; 45s/10000-20000/$multi_port/&quot; $v2ray_server_config
+		;;
+	16)
+		sed -i &quot;46s/6666/$ssport/; 48s/chacha20-ietf/$ssciphers/; 49s/233blog.com/$sspass/&quot; $v2ray_server_config
+		;;
+	17)
+		sed -i &quot;30s/6666/$ssport/; 32s/chacha20-ietf/$ssciphers/; 33s/233blog.com/$sspass/&quot; $v2ray_server_config
+		;;
+	esac
+
+	case $v2ray_transport_opt in
+	6)
+		sed -i &quot;31s/none/utp/&quot; $v2ray_server_config
+		sed -i &quot;44s/none/utp/&quot; $v2ray_client_config
+		;;
+	7)
+		sed -i &quot;31s/none/srtp/&quot; $v2ray_server_config
+		sed -i &quot;44s/none/srtp/&quot; $v2ray_client_config
+		;;
+	8)
+		sed -i &quot;31s/none/wechat-video/&quot; $v2ray_server_config
+		sed -i &quot;44s/none/wechat-video/&quot; $v2ray_client_config
+		;;
+	13)
+		sed -i &quot;74s/none/utp/&quot; $v2ray_server_config
+		sed -i &quot;44s/none/utp/&quot; $v2ray_client_config
+		;;
+	14)
+		sed -i &quot;74s/none/srtp/&quot; $v2ray_server_config
+		sed -i &quot;44s/none/srtp/&quot; $v2ray_client_config
+		;;
+	15)
+		sed -i &quot;74s/none/wechat-video/&quot; $v2ray_server_config
+		sed -i &quot;44s/none/wechat-video/&quot; $v2ray_client_config
+		;;
+	esac
+
+else
+	case $v2ray_transport_opt in
+	9)
+		sed -i &quot;31s/10000-20000/$multi_port/&quot; $v2ray_server_config
+		;;
+	10)
+		sed -i &quot;67s/10000-20000/$multi_port/&quot; $v2ray_server_config
+		;;
+	1[1-5])
+		sed -i &quot;34s/10000-20000/$multi_port/&quot; $v2ray_server_config
+		;;
+	esac
+
+	case $v2ray_transport_opt in
+	6)
+		sed -i &quot;31s/none/utp/&quot; $v2ray_server_config
+		sed -i &quot;44s/none/utp/&quot; $v2ray_client_config
+		;;
+	7)
+		sed -i &quot;31s/none/srtp/&quot; $v2ray_server_config
+		sed -i &quot;44s/none/srtp/&quot; $v2ray_client_config
+		;;
+	8)
+		sed -i &quot;31s/none/wechat-video/&quot; $v2ray_server_config
+		sed -i &quot;44s/none/wechat-video/&quot; $v2ray_client_config
+		;;
+	13)
+		sed -i &quot;63s/none/utp/&quot; $v2ray_server_config
+		sed -i &quot;44s/none/utp/&quot; $v2ray_client_config
+		;;
+	14)
+		sed -i &quot;63s/none/srtp/&quot; $v2ray_server_config
+		sed -i &quot;44s/none/srtp/&quot; $v2ray_client_config
+		;;
+	15)
+		sed -i &quot;63s/none/wechat-video/&quot; $v2ray_server_config
+		sed -i &quot;44s/none/wechat-video/&quot; $v2ray_client_config
+		;;
+	esac
+
+fi
+
+if [[ $v2ray_transport_opt == 17 ]]; then
+	sed -i &quot;8s/2333/$v2ray_port/; 14s/233blog/$username/; 15s/233blog.com/$userpass/&quot; $v2ray_server_config
+else
+	sed -i &quot;8s/2333/$v2ray_port/; 14s/$old_id/$uuid/&quot; $v2ray_server_config
+fi
+
+if [[ $v2ray_transport_opt -eq 16 ]]; then
+	sed -i &quot;24s/233blog.com/$domain/&quot; $v2ray_server_config
+	if [[ $path ]]; then
+		sed -i &quot;26s/233blog/$path/&quot; $v2ray_server_config
+	else
+		sed -i &quot;26s/233blog//&quot; $v2ray_server_config
+	fi
+fi
+
+if [[ $v2ray_transport_opt -eq 4 || $v2ray_transport_opt -eq 16 ]]; then
+	sed -i &quot;s/233blog.com/$domain/; 22s/2333/443/; 25s/$old_id/$uuid/&quot; $v2ray_client_config
+	if [[ $path ]]; then
+		sed -i &quot;40s/233blog/$path/&quot; $v2ray_client_config
+	else
+		sed -i &quot;40s/233blog//&quot; $v2ray_client_config
+	fi
+elif [[ $v2ray_transport_opt == 17 ]]; then
+	sed -i &quot;21s/233blog.com/$ip/; 22s/2333/$v2ray_port/; 25s/233blog/$username/; 26s/233blog.com/$userpass/&quot; $v2ray_client_config
+else
+	sed -i &quot;s/233blog.com/$ip/; 22s/2333/$v2ray_port/; 25s/$old_id/$uuid/&quot; $v2ray_client_config
+fi
+
+# zip -q -r -j --password &quot;233blog.com&quot; /etc/v2ray/233blog_v2ray.zip $v2ray_client_config
+
+if [[ $cmd == &quot;apt-get&quot; ]]; then
+	cat &gt;/etc/network/if-pre-up.d/iptables &lt;&lt;-EOF
+</code></pre>
+<p>#!/bin/sh
+/sbin/iptables-restore &lt; /etc/iptables.rules.v4
+/sbin/ip6tables-restore &lt; /etc/iptables.rules.v6
+EOF
+chmod +x /etc/network/if-pre-up.d/iptables
+else
+[ $(pgrep &quot;firewall&quot;) ] &amp;&amp; systemctl stop firewalld
+systemctl mask firewalld
+systemctl disable firewalld
+systemctl enable iptables
+systemctl enable ip6tables
+systemctl start iptables
+systemctl start ip6tables
+fi</p>
+<pre><code>[ $shadowsocks ] &amp;&amp; open_port $ssport
+if [[ $v2ray_transport_opt == &quot;4&quot; || $v2ray_transport_opt == 16 ]]; then
+	open_port &quot;80&quot;
+	open_port &quot;443&quot;
+	open_port $v2ray_port
+elif [[ $v2ray_transport_opt -ge 9 &amp;&amp; $v2ray_transport_opt -le 15 ]]; then
+	open_port $v2ray_port
+	open_port &quot;multiport&quot;
+else
+	open_port $v2ray_port
+fi
+# systemctl restart v2ray
+do_service restart v2ray
+backup_config
+</code></pre>
+<p>}</p>
+<p>backup_config() {
+sed -i &quot;18s/=1/=<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>v</mi><mn>2</mn><mi>r</mi><mi>a</mi><msub><mi>y</mi><mi>t</mi></msub><mi>r</mi><mi>a</mi><mi>n</mi><mi>s</mi><mi>p</mi><mi>o</mi><mi>r</mi><msub><mi>t</mi><mi>o</mi></msub><mi>p</mi><mi>t</mi><mi mathvariant="normal">/</mi><mo separator="true">;</mo><mn>2</mn><mn>1</mn><mi>s</mi><mi mathvariant="normal">/</mi><mo>=</mo><mn>2</mn><mn>3</mn><mn>3</mn><mn>3</mn><mi mathvariant="normal">/</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">v2ray_transport_opt/; 21s/=2333/=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.03588em;">v</span><span class="mord mathrm">2</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">a</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">t</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">a</span><span class="mord mathit">n</span><span class="mord mathit">s</span><span class="mord mathit">p</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">o</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">p</span><span class="mord mathit">t</span><span class="mord mathrm">/</span><span class="mpunct">;</span><span class="mord mathrm">2</span><span class="mord mathrm">1</span><span class="mord mathit">s</span><span class="mord mathrm">/</span><span class="mrel">=</span><span class="mord mathrm">2</span><span class="mord mathrm">3</span><span class="mord mathrm">3</span><span class="mord mathrm">3</span><span class="mord mathrm">/</span><span class="mrel">=</span></span></span></span>v2ray_port/; 24s/=<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>o</mi><mi>l</mi><msub><mi>d</mi><mi>i</mi></msub><mi>d</mi><mi mathvariant="normal">/</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">old_id/=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord"><span class="mord mathit">d</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">i</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">d</span><span class="mord mathrm">/</span><span class="mrel">=</span></span></span></span>uuid/&quot; $backup
+if [[ $v2ray_transport_opt -ge 9 &amp;&amp; <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>v</mi><mn>2</mn><mi>r</mi><mi>a</mi><msub><mi>y</mi><mi>t</mi></msub><mi>r</mi><mi>a</mi><mi>n</mi><mi>s</mi><mi>p</mi><mi>o</mi><mi>r</mi><msub><mi>t</mi><mi>o</mi></msub><mi>p</mi><mi>t</mi><mo>−</mo><mi>l</mi><mi>e</mi><mn>1</mn><mn>5</mn><mo>]</mo><mo>]</mo><mo separator="true">;</mo><mi>t</mi><mi>h</mi><mi>e</mi><mi>n</mi><mi>s</mi><mi>e</mi><mi>d</mi><mo>−</mo><mi>i</mi><mi mathvariant="normal">&quot;</mi><mn>3</mn><mn>0</mn><mi>s</mi><mi mathvariant="normal">/</mi><mo>=</mo><mn>1</mn><mn>0</mn><mn>0</mn><mn>0</mn><mn>0</mn><mi mathvariant="normal">/</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">v2ray_transport_opt -le 15 ]]; then
+		sed -i &quot;30s/=10000/=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.03588em;">v</span><span class="mord mathrm">2</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">a</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">t</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">a</span><span class="mord mathit">n</span><span class="mord mathit">s</span><span class="mord mathit">p</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">o</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">p</span><span class="mord mathit">t</span><span class="mbin">−</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">e</span><span class="mord mathrm">1</span><span class="mord mathrm">5</span><span class="mclose">]</span><span class="mclose">]</span><span class="mpunct">;</span><span class="mord mathit">t</span><span class="mord mathit">h</span><span class="mord mathit">e</span><span class="mord mathit">n</span><span class="mord mathit">s</span><span class="mord mathit">e</span><span class="mord mathit">d</span><span class="mbin">−</span><span class="mord mathit">i</span><span class="mord mathrm">&quot;</span><span class="mord mathrm">3</span><span class="mord mathrm">0</span><span class="mord mathit">s</span><span class="mord mathrm">/</span><span class="mrel">=</span><span class="mord mathrm">1</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">0</span><span class="mord mathrm">/</span><span class="mrel">=</span></span></span></span>v2ray_dynamic_port_start_input/; 33s/=20000/=$v2ray_dynamic_port_end_input/&quot; $backup
+fi
+if [ <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mi>h</mi><mi>a</mi><mi>d</mi><mi>o</mi><mi>w</mi><mi>s</mi><mi>o</mi><mi>c</mi><mi>k</mi><mi>s</mi><mo>]</mo><mo separator="true">;</mo><mi>t</mi><mi>h</mi><mi>e</mi><mi>n</mi><mi>s</mi><mi>e</mi><mi>d</mi><mo>−</mo><mi>i</mi><mi mathvariant="normal">&quot;</mi><mn>4</mn><mn>2</mn><mi>s</mi><mi mathvariant="normal">/</mi><mo>=</mo><mi mathvariant="normal">/</mi><mo>=</mo><mi>t</mi><mi>r</mi><mi>u</mi><mi>e</mi><mi mathvariant="normal">/</mi><mo separator="true">;</mo><mn>4</mn><mn>5</mn><mi>s</mi><mi mathvariant="normal">/</mi><mo>=</mo><mn>6</mn><mn>6</mn><mn>6</mn><mn>6</mn><mi mathvariant="normal">/</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">shadowsocks ]; then
+		sed -i &quot;42s/=/=true/; 45s/=6666/=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit">s</span><span class="mord mathit">h</span><span class="mord mathit">a</span><span class="mord mathit">d</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02691em;">w</span><span class="mord mathit">s</span><span class="mord mathit">o</span><span class="mord mathit">c</span><span class="mord mathit" style="margin-right:0.03148em;">k</span><span class="mord mathit">s</span><span class="mclose">]</span><span class="mpunct">;</span><span class="mord mathit">t</span><span class="mord mathit">h</span><span class="mord mathit">e</span><span class="mord mathit">n</span><span class="mord mathit">s</span><span class="mord mathit">e</span><span class="mord mathit">d</span><span class="mbin">−</span><span class="mord mathit">i</span><span class="mord mathrm">&quot;</span><span class="mord mathrm">4</span><span class="mord mathrm">2</span><span class="mord mathit">s</span><span class="mord mathrm">/</span><span class="mrel">=</span><span class="mord mathrm">/</span><span class="mrel">=</span><span class="mord mathit">t</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">u</span><span class="mord mathit">e</span><span class="mord mathrm">/</span><span class="mpunct">;</span><span class="mord mathrm">4</span><span class="mord mathrm">5</span><span class="mord mathit">s</span><span class="mord mathrm">/</span><span class="mrel">=</span><span class="mord mathrm">6</span><span class="mord mathrm">6</span><span class="mord mathrm">6</span><span class="mord mathrm">6</span><span class="mord mathrm">/</span><span class="mrel">=</span></span></span></span>ssport/; 48s/=233blog.com/=<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>s</mi><mi>s</mi><mi>p</mi><mi>a</mi><mi>s</mi><mi>s</mi><mi mathvariant="normal">/</mi><mo separator="true">;</mo><mn>5</mn><mn>1</mn><mi>s</mi><mi mathvariant="normal">/</mi><mo>=</mo><mi>c</mi><mi>h</mi><mi>a</mi><mi>c</mi><mi>h</mi><mi>a</mi><mn>2</mn><mn>0</mn><mo>−</mo><mi>i</mi><mi>e</mi><mi>t</mi><mi>f</mi><mi mathvariant="normal">/</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">sspass/; 51s/=chacha20-ietf/=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit">s</span><span class="mord mathit">s</span><span class="mord mathit">p</span><span class="mord mathit">a</span><span class="mord mathit">s</span><span class="mord mathit">s</span><span class="mord mathrm">/</span><span class="mpunct">;</span><span class="mord mathrm">5</span><span class="mord mathrm">1</span><span class="mord mathit">s</span><span class="mord mathrm">/</span><span class="mrel">=</span><span class="mord mathit">c</span><span class="mord mathit">h</span><span class="mord mathit">a</span><span class="mord mathit">c</span><span class="mord mathit">h</span><span class="mord mathit">a</span><span class="mord mathrm">2</span><span class="mord mathrm">0</span><span class="mbin">−</span><span class="mord mathit">i</span><span class="mord mathit">e</span><span class="mord mathit">t</span><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="mord mathrm">/</span><span class="mrel">=</span></span></span></span>ssciphers/&quot; $backup
+fi
+[[ $v2ray_transport_opt == &quot;4&quot; || v2ray_transport_opt == 16 ]] && sed -i "36s/=233blog.com/=domain/&quot; $backup
+[ $caddy ] &amp;&amp; sed -i &quot;39s/=/=true/&quot; $backup
+[ $is_blocked_ad ] &amp;&amp; sed -i &quot;54s/=/=true/&quot; $backup
+if [[ <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>p</mi><mi>a</mi><mi>t</mi><mi>h</mi><mo>]</mo><mo>]</mo><mo separator="true">;</mo><mi>t</mi><mi>h</mi><mi>e</mi><mi>n</mi><mi>s</mi><mi>e</mi><mi>d</mi><mo>−</mo><mi>i</mi><mi mathvariant="normal">&quot;</mi><mn>5</mn><mn>7</mn><mi>s</mi><mi mathvariant="normal">/</mi><mo>=</mo><mi mathvariant="normal">/</mi><mo>=</mo><mi>t</mi><mi>r</mi><mi>u</mi><mi>e</mi><mi mathvariant="normal">/</mi><mo separator="true">;</mo><mn>6</mn><mn>0</mn><mi>s</mi><mi mathvariant="normal">/</mi><mo>=</mo><mn>2</mn><mn>3</mn><mn>3</mn><mi>b</mi><mi>l</mi><mi>o</mi><mi>g</mi><mi mathvariant="normal">/</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">path ]]; then
+		sed -i &quot;57s/=/=true/; 60s/=233blog/=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit">p</span><span class="mord mathit">a</span><span class="mord mathit">t</span><span class="mord mathit">h</span><span class="mclose">]</span><span class="mclose">]</span><span class="mpunct">;</span><span class="mord mathit">t</span><span class="mord mathit">h</span><span class="mord mathit">e</span><span class="mord mathit">n</span><span class="mord mathit">s</span><span class="mord mathit">e</span><span class="mord mathit">d</span><span class="mbin">−</span><span class="mord mathit">i</span><span class="mord mathrm">&quot;</span><span class="mord mathrm">5</span><span class="mord mathrm">7</span><span class="mord mathit">s</span><span class="mord mathrm">/</span><span class="mrel">=</span><span class="mord mathrm">/</span><span class="mrel">=</span><span class="mord mathit">t</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">u</span><span class="mord mathit">e</span><span class="mord mathrm">/</span><span class="mpunct">;</span><span class="mord mathrm">6</span><span class="mord mathrm">0</span><span class="mord mathit">s</span><span class="mord mathrm">/</span><span class="mrel">=</span><span class="mord mathrm">2</span><span class="mord mathrm">3</span><span class="mord mathrm">3</span><span class="mord mathit">b</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.03588em;">g</span><span class="mord mathrm">/</span><span class="mrel">=</span></span></span></span>path/&quot; backup
+		sed -i "63s#=https://liyafly.com#=proxy_site#&quot; $backup
+fi
+if [[ <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>v</mi><mn>2</mn><mi>r</mi><mi>a</mi><msub><mi>y</mi><mi>t</mi></msub><mi>r</mi><mi>a</mi><mi>n</mi><mi>s</mi><mi>p</mi><mi>o</mi><mi>r</mi><msub><mi>t</mi><mi>o</mi></msub><mi>p</mi><mi>t</mi><mo>=</mo><mo>=</mo><mn>1</mn><mn>7</mn><mo>]</mo><mo>]</mo><mo separator="true">;</mo><mi>t</mi><mi>h</mi><mi>e</mi><mi>n</mi><mi>s</mi><mi>e</mi><mi>d</mi><mo>−</mo><mi>i</mi><mi mathvariant="normal">&quot;</mi><mn>6</mn><mn>6</mn><mi>s</mi><mi mathvariant="normal">/</mi><mo>=</mo><mn>2</mn><mn>3</mn><mn>3</mn><mi>b</mi><mi>l</mi><mi>o</mi><mi>g</mi><mi mathvariant="normal">/</mi><mo>=</mo></mrow><annotation encoding="application/x-tex">v2ray_transport_opt == 17 ]]; then
+		sed -i &quot;66s/=233blog/=</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.03588em;">v</span><span class="mord mathrm">2</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">a</span><span class="mord"><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.03588em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">t</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">a</span><span class="mord mathit">n</span><span class="mord mathit">s</span><span class="mord mathit">p</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord"><span class="mord mathit">t</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:0em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">o</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">p</span><span class="mord mathit">t</span><span class="mrel">=</span><span class="mrel">=</span><span class="mord mathrm">1</span><span class="mord mathrm">7</span><span class="mclose">]</span><span class="mclose">]</span><span class="mpunct">;</span><span class="mord mathit">t</span><span class="mord mathit">h</span><span class="mord mathit">e</span><span class="mord mathit">n</span><span class="mord mathit">s</span><span class="mord mathit">e</span><span class="mord mathit">d</span><span class="mbin">−</span><span class="mord mathit">i</span><span class="mord mathrm">&quot;</span><span class="mord mathrm">6</span><span class="mord mathrm">6</span><span class="mord mathit">s</span><span class="mord mathrm">/</span><span class="mrel">=</span><span class="mord mathrm">2</span><span class="mord mathrm">3</span><span class="mord mathrm">3</span><span class="mord mathit">b</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.03588em;">g</span><span class="mord mathrm">/</span><span class="mrel">=</span></span></span></span>username/; 69s/=233blog.com/=$userpass/&quot; $backup
+fi
+}</p>
+<p>try_enable_bbr() {
+if [[ $(uname -r | cut -b 1) -eq 4 ]]; then
+case $(uname -r | cut -b 3-4) in
+9. | [1-9][0-9])
+sed -i '/net.ipv4.tcp_congestion_control/d' /etc/sysctl.conf
+sed -i '/net.core.default_qdisc/d' /etc/sysctl.conf
+echo &quot;net.ipv4.tcp_congestion_control = bbr&quot; &gt;&gt;/etc/sysctl.conf
+echo &quot;net.core.default_qdisc = fq&quot; &gt;&gt;/etc/sysctl.conf
+sysctl -p &gt;/dev/null 2&gt;&amp;1
+;;
+esac
+fi
+}</p>
+<p>get_ip() {
+ip=$(curl -s https://ipinfo.io/ip)
+}</p>
+<p>error() {</p>
+<pre><code>echo -e &quot;\n$red 输入错误！$none\n&quot;
+</code></pre>
+<p>}</p>
+<p>pause() {</p>
+<pre><code>read -rsp &quot;$(echo -e &quot;按$green Enter 回车键 $none继续....或按$red Ctrl + C $none取消.&quot;)&quot; -d $'\n'
+echo
+</code></pre>
+<p>}
+do_service() {
+if [[ $systemd ]]; then
+systemctl $1 $2
+else
+service $2 $1
+fi
+}
+show_config_info() {
+local header=&quot;none&quot;
+if [[ <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>p</mi><mi>a</mi><mi>t</mi><mi>h</mi><mo>]</mo><mo>]</mo><mo separator="true">;</mo><mi>t</mi><mi>h</mi><mi>e</mi><mi>n</mi><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><msub><mi>l</mi><mi>p</mi></msub><mi>a</mi><mi>t</mi><mi>h</mi><mo>=</mo><mi mathvariant="normal">&quot;</mi><mi mathvariant="normal">/</mi></mrow><annotation encoding="application/x-tex">path ]]; then
+		local _path=&quot;/</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1.036108em;vertical-align:-0.286108em;"></span><span class="base textstyle uncramped"><span class="mord mathit">p</span><span class="mord mathit">a</span><span class="mord mathit">t</span><span class="mord mathit">h</span><span class="mclose">]</span><span class="mclose">]</span><span class="mpunct">;</span><span class="mord mathit">t</span><span class="mord mathit">h</span><span class="mord mathit">e</span><span class="mord mathit">n</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit">c</span><span class="mord mathit">a</span><span class="mord"><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.01968em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">p</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">a</span><span class="mord mathit">t</span><span class="mord mathit">h</span><span class="mrel">=</span><span class="mord mathrm">&quot;</span><span class="mord mathrm">/</span></span></span></span>path&quot;
+else
+local _path=&quot;/&quot;
+fi</p>
+<pre><code>case $v2ray_transport_opt in
+1 | 9)
+	local net=&quot;tcp&quot;
+	# local network=&quot;tcp&quot;
+	# local obfs=&quot;none&quot;
+	;;
+2 | 10)
+	local net=&quot;tcp&quot;
+	# local network=&quot;tcp&quot;
+	local header=&quot;http&quot;
+	local host=&quot;www.baidu.com&quot;
+	# local obfs=&quot;http&quot;
+	;;
+3 | 4 | 11)
+	local net=&quot;ws&quot;
+	# local network=&quot;ws&quot;
+	# local obfs=&quot;websocket&quot;
+	;;
+5 | 12)
+	local net=&quot;kcp&quot;
+	# local network=&quot;kcp&quot;
+	;;
+6 | 13)
+	local net=&quot;kcp&quot;
+	# local network=&quot;kcp&quot;
+	local header=&quot;utp&quot;
+	;;
+7 | 14)
+	local net=&quot;kcp&quot;
+	# local network=&quot;kcp&quot;
+	local header=&quot;srtp&quot;
+	;;
+8 | 15)
+	local net=&quot;kcp&quot;
+	# local network=&quot;kcp&quot;
+	local header=&quot;wechat-video&quot;
+	;;
+16)
+	local net=&quot;h2&quot;
+	# local network=&quot;h2&quot;
+	;;
+esac
+if [[ $v2ray_transport_opt == &quot;4&quot; || $v2ray_transport_opt == 16 ]]; then
+	cat &gt;/etc/v2ray/vmess_qr.json &lt;&lt;-EOF
+	{
+		&quot;v&quot;: &quot;2&quot;,
+		&quot;ps&quot;: &quot;v2ray66.com_${domain}&quot;,
+		&quot;add&quot;: &quot;${domain}&quot;,
+		&quot;port&quot;: &quot;443&quot;,
+		&quot;id&quot;: &quot;${uuid}&quot;,
+		&quot;aid&quot;: &quot;233&quot;,
+		&quot;net&quot;: &quot;${net}&quot;,
+		&quot;type&quot;: &quot;none&quot;,
+		&quot;host&quot;: &quot;${domain}&quot;,
+		&quot;path&quot;: &quot;$_path&quot;,
+		&quot;tls&quot;: &quot;tls&quot;
+	}
+	EOF
+elif [[ $v2ray_transport_opt != 17 ]]; then
+	cat &gt;/etc/v2ray/vmess_qr.json &lt;&lt;-EOF
+	{
+		&quot;v&quot;: &quot;2&quot;,
+		&quot;ps&quot;: &quot;v2ray66.com_${ip}&quot;,
+		&quot;add&quot;: &quot;${ip}&quot;,
+		&quot;port&quot;: &quot;${v2ray_port}&quot;,
+		&quot;id&quot;: &quot;${uuid}&quot;,
+		&quot;aid&quot;: &quot;233&quot;,
+		&quot;net&quot;: &quot;${net}&quot;,
+		&quot;type&quot;: &quot;${header}&quot;,
+		&quot;host&quot;: &quot;${host}&quot;,
+		&quot;path&quot;: &quot;&quot;,
+		&quot;tls&quot;: &quot;&quot;
+	}
+	EOF
+fi
+clear
+echo
+echo &quot;---------- V2Ray 安装完成 -------------&quot;
+echo
+echo -e &quot; $yellow输入 ${cyan}v2ray${none} $yellow即可管理 V2Ray${none}&quot;
+echo
+echo -e &quot; ${yellow}V2Ray 客户端使用教程: https://v2ray66.com/post/4/$none&quot;
+echo
+if [[ $v2ray_transport_opt == &quot;4&quot; &amp;&amp; ! $caddy ]]; then
+	echo -e &quot; $red警告！$none$yellow请自行配置 TLS...教程: https://v2ray66.com/post/3/$none&quot;
+	echo
+fi
+echo &quot;---------- V2Ray 配置信息 -------------&quot;
+if [[ $v2ray_transport_opt == &quot;4&quot; || $v2ray_transport_opt == 16 ]]; then
+	echo
+	echo -e &quot;$yellow 地址 (Address) = $cyan${domain}$none&quot;
+	echo
+	echo -e &quot;$yellow 端口 (Port) = ${cyan}443${none}&quot;
+	echo
+	echo -e &quot;$yellow 用户ID (User ID / UUID) = $cyan${uuid}$none&quot;
+	echo
+	echo -e &quot;$yellow 额外ID (Alter Id) = ${cyan}233${none}&quot;
+	echo
+	echo -e &quot;$yellow 传输协议 (Network) = ${cyan}${net}$none&quot;
+	echo
+	echo -e &quot;$yellow 伪装类型 (header type) = ${cyan}${header}$none&quot;
+	echo
+	echo -e &quot;$yellow 伪装域名 (host) = ${cyan}${domain}$none&quot;
+	echo
+	echo -e &quot;$yellow 路径 (path) = ${cyan}${_path}$none&quot;
+	echo
+	echo -e &quot;$yellow TLS (Enable TLS) = ${cyan}打开$none&quot;
+	echo
+elif [[ $v2ray_transport_opt == 17 ]]; then
+	echo
+	echo -e &quot;$yellow 主机 (Hostname) = $cyan${ip}$none&quot;
+	echo
+	echo -e &quot;$yellow 端口 (Port) = $cyan$v2ray_port$none&quot;
+	echo
+	echo -e &quot;$yellow 用户名 (Username) = $cyan${username}$none&quot;
+	echo
+	echo -e &quot;$yellow 密码 (Password) = $cyan${userpass}$none&quot;
+	echo
+	echo -e &quot;$yellow Telegram 代理配置链接 = ${cyan}tg://socks?server=${ip}&amp;port=${v2ray_port}&amp;user=${username}&amp;pass=${userpass}$none&quot;
+	echo
+	echo &quot; 这是 Socks5 协议相关的配置啦.... 不用在乎一些 V2Ray 客户端 怎么没有这些东东配置的&quot;
+	echo
+else
+	echo
+	echo -e &quot;$yellow 地址 (Address) = $cyan${ip}$none&quot;
+	echo
+	echo -e &quot;$yellow 端口 (Port) = $cyan$v2ray_port$none&quot;
+	echo
+	echo -e &quot;$yellow 用户ID (User ID / UUID) = $cyan${uuid}$none&quot;
+	echo
+	echo -e &quot;$yellow 额外ID (Alter Id) = ${cyan}233${none}&quot;
+	echo
+	echo -e &quot;$yellow 传输协议 (Network) = ${cyan}${net}$none&quot;
+	echo
+	echo -e &quot;$yellow 伪装类型 (header type) = ${cyan}${header}$none&quot;
+	echo
+fi
+if [[ $v2ray_transport_opt -ge 9 &amp;&amp; $v2ray_transport_opt -le 15 ]] &amp;&amp; [[ $is_blocked_ad ]]; then
+	echo &quot; 备注: 动态端口已启用...广告拦截已开启...&quot;
+	echo
+elif [[ $v2ray_transport_opt -ge 9 &amp;&amp; $v2ray_transport_opt -le 15 ]]; then
+	echo &quot; 备注: 动态端口已启用...&quot;
+	echo
+elif [[ $is_blocked_ad ]]; then
+	echo &quot; 备注: 广告拦截已开启..&quot;
+	echo
+fi
+if [ $shadowsocks ]; then
+	local ss=&quot;ss://$(echo -n &quot;${ssciphers}:${sspass}@${ip}:${ssport}&quot; | base64 -w 0)#v2ray66.com_ss_${ip}&quot;
+	echo
+	echo &quot;---------- Shadowsocks 配置信息 -------------&quot;
+	echo
+	echo -e &quot;$yellow 服务器地址 = $cyan${ip}$none&quot;
+	echo
+	echo -e &quot;$yellow 服务器端口 = $cyan$ssport$none&quot;
+	echo
+	echo -e &quot;$yellow 密码 = $cyan$sspass$none&quot;
+	echo
+	echo -e &quot;$yellow 加密协议 = $cyan${ssciphers}$none&quot;
+	echo
+	echo -e &quot;$yellow SS 链接 = ${cyan}$ss$none&quot;
+	echo
+	echo -e &quot; 备注:$red Shadowsocks Win 4.0.6 $none客户端可能无法识别该 SS 链接&quot;
+	echo
+	if [[ $v2ray_transport_opt == 17 ]]; then
+		echo -e &quot; 温馨提示: 使用${cyan} v2ray ssqr ${none}即可生成 Shadowsocks 配置信息二维码&quot;
+		echo
+	fi
+fi
+</code></pre>
+<p>}
+create_qr_link_ask() {
+if [[ $shadowsocks &amp;&amp; v2ray_transport_opt != 17 ]]; then
+		echo
+		while :; do
+			echo -e "是否需要生成yellow V2Ray 和 Shadowsocks none配置信息二维码链接 [{magenta}Y/N<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mi>o</mi><mi>n</mi><mi>e</mi><mo>]</mo><mi mathvariant="normal">&quot;</mi><mi>r</mi><mi>e</mi><mi>a</mi><mi>d</mi><mo>−</mo><mi>p</mi><mi mathvariant="normal">&quot;</mi></mrow><annotation encoding="application/x-tex">none]&quot;
+			read -p &quot;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit">n</span><span class="mord mathit">o</span><span class="mord mathit">n</span><span class="mord mathit">e</span><span class="mclose">]</span><span class="mord mathrm">&quot;</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">e</span><span class="mord mathit">a</span><span class="mord mathit">d</span><span class="mbin">−</span><span class="mord mathit">p</span><span class="mord mathrm">&quot;</span></span></span></span>(echo -e &quot;默认 [<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi>m</mi><mi>a</mi><mi>g</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>a</mi></mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">{magenta}N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathit">m</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.03588em;">g</span><span class="mord mathit">e</span><span class="mord mathit">n</span><span class="mord mathit">t</span><span class="mord mathit">a</span></span><span class="mord mathit" style="margin-right:0.10903em;">N</span></span></span></span>none]:&quot;)&quot; y_n
+[ -z $y_n ] &amp;&amp; y_n=&quot;n&quot;
+if [[ $y_n == [Yy] ]]; then
+get_qr_link 1
+break
+elif [[ $y_n == [Nn] ]]; then
+rm -rf /etc/v2ray/vmess_qr.json
+# rm -rf /etc/v2ray/shadowray_qr.txt
+break
+else
+error
+fi
+done
+elif [[ v2ray_transport_opt != 17 ]]; then
+		echo
+		while :; do
+			echo -e "是否需要生成yellow V2Ray 配置信息 none二维码链接 [{magenta}Y/N<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mi>o</mi><mi>n</mi><mi>e</mi><mo>]</mo><mi mathvariant="normal">&quot;</mi><mi>r</mi><mi>e</mi><mi>a</mi><mi>d</mi><mo>−</mo><mi>p</mi><mi mathvariant="normal">&quot;</mi></mrow><annotation encoding="application/x-tex">none]&quot;
+			read -p &quot;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit">n</span><span class="mord mathit">o</span><span class="mord mathit">n</span><span class="mord mathit">e</span><span class="mclose">]</span><span class="mord mathrm">&quot;</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">e</span><span class="mord mathit">a</span><span class="mord mathit">d</span><span class="mbin">−</span><span class="mord mathit">p</span><span class="mord mathrm">&quot;</span></span></span></span>(echo -e &quot;默认 [<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi>m</mi><mi>a</mi><mi>g</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>a</mi></mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">{magenta}N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.8777699999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathit">m</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.03588em;">g</span><span class="mord mathit">e</span><span class="mord mathit">n</span><span class="mord mathit">t</span><span class="mord mathit">a</span></span><span class="mord mathit" style="margin-right:0.10903em;">N</span></span></span></span>none]:&quot;)&quot; y_n
+[ -z $y_n ] &amp;&amp; y_n=&quot;n&quot;
+if [[ $y_n == [Yy] ]]; then
+get_qr_link
+break
+elif [[ $y_n == [Nn] ]]; then
+rm -rf /etc/v2ray/vmess_qr.json
+# rm -rf /etc/v2ray/shadowray_qr.txt
+break
+else
+error
+fi
+done
+fi
+}
+get_qr_link() {</p>
+<pre><code>echo
+echo -e &quot;$green 正在生成链接.... 稍等片刻即可....$none&quot;
+echo
+
+if [[ $1 ]]; then
+	local random1=$(echo $RANDOM-$RANDOM-$RANDOM | base64 -w 0)
+	local random2=$(echo $RANDOM-$RANDOM-$RANDOM | base64 -w 0)
+	local vmess=&quot;vmess://$(cat /etc/v2ray/vmess_qr.json | tr -d '\n' | base64 -w 0)&quot;
+	echo $vmess | tr -d '\n' &gt;/etc/v2ray/vmess.txt
+	cat /etc/v2ray/vmess.txt | qrencode -s 50 -o /tmp/233blog_v2ray.png
+	local link1=$(curl -s --upload-file /tmp/233blog_v2ray.png &quot;https://transfer.sh/${random1}_v2ray666_v2ray.png&quot;)
+	local ss=&quot;ss://$(echo -n &quot;${ssciphers}:${sspass}@${ip}:${ssport}&quot; | base64 -w 0)#v2ray66.com_ss_${ip}&quot;
+	echo &quot;${ss}&quot; &gt;/tmp/233blog_shadowsocks.txt
+	cat /tmp/233blog_shadowsocks.txt | qrencode -s 50 -o /tmp/233blog_shadowsocks.png
+	local link2=$(curl -s --upload-file /tmp/233blog_shadowsocks.png &quot;https://transfer.sh/${random2}_v2ray666_shadowsocks.png&quot;)
+	if [[ $link1 &amp;&amp; $link2 ]]; then
+		echo
+		echo &quot;---------- V2Ray 二维码链接 -------------&quot;
+		echo
+		echo -e &quot;$yellow 适用于 V2RayNG v0.4.1+ / Kitsunebi = $cyan${link1}$none&quot;
+		echo
+		echo
+		echo -e &quot;$red 友情提醒: 请务必核对扫码结果 (V2RayNG 除外) $none&quot;
+		echo
+		echo
+		echo &quot;---------- Shadowsocks 二维码链接 -------------&quot;
+		echo
+		echo -e &quot;$yellow 链接 = $cyan${link2}$none&quot;
+		echo
+		echo -e &quot; 温馨提示...$red Shadowsocks Win 4.0.6 $none客户端可能无法识别该二维码&quot;
+		echo
+		echo
+		echo &quot;----------------------------------------------------------------&quot;
+		echo
+		echo &quot;备注...链接将在 14 天后失效&quot;
+		echo
+		echo &quot;提醒...请不要把链接分享出去...除非你有特别的理由....&quot;
+		echo
+	else
+		echo
+		echo -e &quot;$red 哎呀呀呀...出错咯...$none&quot;
+		echo
+		echo -e &quot; 请尝试使用${cyan} v2ray qr ${none}生成 V2Ray 配置信息二维码&quot;
+		echo
+		echo -e &quot; 请尝试使用${cyan} v2ray ssqr ${none}生成 Shadowsocks 配置信息二维码&quot;
+		echo
+	fi
+
+	rm -rf /tmp/233blog_shadowsocks.png
+	rm -rf /tmp/233blog_shadowsocks.txt
+else
+	local random1=$(echo $RANDOM-$RANDOM-$RANDOM | base64 -w 0)
+	local vmess=&quot;vmess://$(cat /etc/v2ray/vmess_qr.json | tr -d '\n' | base64 -w 0)&quot;
+	echo $vmess | tr -d '\n' &gt;/etc/v2ray/vmess.txt
+	cat /etc/v2ray/vmess.txt | qrencode -s 50 -o /tmp/233blog_v2ray.png
+	local link1=$(curl -s --upload-file /tmp/233blog_v2ray.png &quot;https://transfer.sh/${random1}_v2ray666_v2ray.png&quot;)
+
+	if [[ $link1 ]]; then
+		echo
+		echo &quot;---------- V2Ray 二维码链接 -------------&quot;
+		echo
+		echo -e &quot;$yellow 适用于 V2RayNG v0.4.1+ / Kitsunebi = $cyan${link1}$none&quot;
+		echo
+		echo
+		echo -e &quot;$red 友情提醒: 请务必核对扫码结果 (V2RayNG 除外) $none&quot;
+		echo
+		echo
+		echo &quot;----------------------------------------------------------------&quot;
+		echo
+		echo &quot;备注...链接将在 14 天后失效&quot;
+		echo
+		echo &quot;提醒...请不要把链接分享出去...除非你有特别的理由....&quot;
+		echo
+	else
+		echo
+		echo -e &quot;$red 哎呀呀呀...出错咯...请重试$none&quot;
+		echo
+		echo -e &quot; 请尝试使用${cyan} v2ray qr ${none}生成 V2Ray 配置信息二维码&quot;
+		echo
+	fi
+fi
+
+rm -rf /tmp/233blog_v2ray.png
+rm -rf /etc/v2ray/vmess_qr.json
+rm -rf /etc/v2ray/vmess.txt
+</code></pre>
+<p>}</p>
+<p>install() {
+if [[ -f /usr/bin/v2ray/v2ray &amp;&amp; -f /etc/v2ray/config.json ]] &amp;&amp; [[ -f $backup &amp;&amp; -d /etc/v2ray/233boy/v2ray ]]; then
+echo
+echo &quot; 大佬...你已经安装 V2Ray 啦...无需重新安装&quot;
+echo
+echo -e &quot; $yellow输入 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi>c</mi><mi>y</mi><mi>a</mi><mi>n</mi></mrow><mi>v</mi><mn>2</mn><mi>r</mi><mi>a</mi><mi>y</mi></mrow><annotation encoding="application/x-tex">{cyan}v2ray</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathit">c</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">a</span><span class="mord mathit">n</span></span><span class="mord mathit" style="margin-right:0.03588em;">v</span><span class="mord mathrm">2</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.03588em;">y</span></span></span></span>{none} yellow即可管理 V2Ray{none}&quot;
+echo
+exit 1
+elif [[ -f /usr/bin/v2ray/v2ray &amp;&amp; -f /etc/v2ray/config.json ]] &amp;&amp; [[ -f /etc/v2ray/233blog_v2ray_backup.txt &amp;&amp; -d /etc/v2ray/233boy/v2ray ]]; then
+echo
+echo &quot; 大佬... 如果你需要继续安装.. 请先卸载旧版本&quot;
+echo
+echo -e &quot; $yellow输入 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi>c</mi><mi>y</mi><mi>a</mi><mi>n</mi></mrow><mi>v</mi><mn>2</mn><mi>r</mi><mi>a</mi><mi>y</mi><mi>u</mi><mi>n</mi><mi>i</mi><mi>n</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>l</mi><mi>l</mi></mrow><annotation encoding="application/x-tex">{cyan}v2ray uninstall</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathit">c</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">a</span><span class="mord mathit">n</span></span><span class="mord mathit" style="margin-right:0.03588em;">v</span><span class="mord mathrm">2</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.03588em;">y</span><span class="mord mathit">u</span><span class="mord mathit">n</span><span class="mord mathit">i</span><span class="mord mathit">n</span><span class="mord mathit">s</span><span class="mord mathit">t</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit" style="margin-right:0.01968em;">l</span></span></span></span>{none} yellow即可卸载{none}&quot;
+echo
+exit 1
+fi
+v2ray_config
+blocked_hosts
+shadowsocks_config
+install_info
+try_enable_bbr
+[ $caddy ] &amp;&amp; domain_check
+install_v2ray
+if [[ $caddy || $v2ray_port == &quot;80&quot; ]]; then
+if [[ $cmd == &quot;yum&quot; ]]; then
+[[ $(pgrep &quot;httpd&quot;) ]] &amp;&amp; systemctl stop httpd
+[[ $(command -v httpd) ]] &amp;&amp; yum remove httpd -y
+else
+[[ $(pgrep &quot;apache2&quot;) ]] &amp;&amp; service apache2 stop
+[[ $(command -v apache2) ]] &amp;&amp; apt-get remove apache2* -y
+fi
+fi
+[ $caddy ] &amp;&amp; install_caddy
+get_ip
+config
+show_config_info
+create_qr_link_ask
+}
+uninstall() {</p>
+<pre><code>if [[ -f /usr/bin/v2ray/v2ray &amp;&amp; -f /etc/v2ray/config.json ]] &amp;&amp; [[ -f $backup &amp;&amp; -d /etc/v2ray/233boy/v2ray ]]; then
+	. $backup
+	while :; do
+		echo
+		read -p &quot;$(echo -e &quot;是否卸载 ${yellow}V2Ray$none [${magenta}Y/N$none]:&quot;)&quot; uninstall_v2ray_ask
+		if [[ -z $uninstall_v2ray_ask ]]; then
+			error
+		else
+			case $uninstall_v2ray_ask in
+			Y | y)
+				is_uninstall_v2ray=true
+				echo
+				echo -e &quot;$yellow 卸载 V2Ray = ${cyan}是${none}&quot;
+				echo
+				break
+				;;
+			N | n)
+				echo
+				echo -e &quot;$red 卸载已取消...$none&quot;
+				echo
+				break
+				;;
+			*)
+				error
+				;;
+			esac
+		fi
+	done
+
+	if [[ $caddy_status ]] &amp;&amp; [[ -f /usr/local/bin/caddy &amp;&amp; -f /etc/caddy/Caddyfile ]]; then
+		while :; do
+			echo
+			read -p &quot;$(echo -e &quot;是否卸载 ${yellow}Caddy$none [${magenta}Y/N$none]:&quot;)&quot; uninstall_caddy_ask
+			if [[ -z $uninstall_caddy_ask ]]; then
+				error
+			else
+				case $uninstall_caddy_ask in
+				Y | y)
+					is_uninstall_caddy=true
+					echo
+					echo -e &quot;$yellow 卸载 Caddy = ${cyan}是${none}&quot;
+					echo
+					break
+					;;
+				N | n)
+					echo
+					echo -e &quot;$yellow 卸载 Caddy = ${cyan}否${none}&quot;
+					echo
+					break
+					;;
+				*)
+					error
+					;;
+				esac
+			fi
+		done
+	fi
+
+	if [[ $is_uninstall_v2ray &amp;&amp; $is_uninstall_caddy ]]; then
+		pause
+		echo
+
+		if [[ $shadowsocks_status ]]; then
+			del_port $ssport
+		fi
+
+		if [[ $v2ray_transport == &quot;4&quot; || $v2ray_transport == 16 ]]; then
+			del_port &quot;80&quot;
+			del_port &quot;443&quot;
+			del_port $v2ray_port
+		elif [[ $v2ray_transport -ge 9 &amp;&amp; $v2ray_transport -le 15 ]]; then
+			del_port $v2ray_port
+			del_port &quot;multiport&quot;
+		else
+			del_port $v2ray_port
+		fi
+
+		[ $cmd == &quot;apt-get&quot; ] &amp;&amp; rm -rf /etc/network/if-pre-up.d/iptables
+
+		v2ray_pid=$(ps ux | grep &quot;/usr/bin/v2ray/v2ray&quot; | grep -v grep | awk '{print $2}')
+		# [ $v2ray_pid ] &amp;&amp; systemctl stop v2ray
+		[ $v2ray_pid ] &amp;&amp; do_service stop v2ray
+
+		rm -rf /usr/bin/v2ray
+		rm -rf $_v2ray_sh
+		rm -rf /etc/v2ray
+		rm -rf /var/log/v2ray
+
+		caddy_pid=$(pgrep &quot;caddy&quot;)
+		# [ $caddy_pid ] &amp;&amp; systemctl stop caddy
+		[ $caddy_pid ] &amp;&amp; do_service stop caddy
+		rm -rf /usr/local/bin/caddy
+		rm -rf /etc/caddy
+		rm -rf /etc/ssl/caddy
+
+		if [[ $systemd ]]; then
+			systemctl disable v2ray &gt;/dev/null 2&gt;&amp;1
+			rm -rf /lib/systemd/system/v2ray.service
+			systemctl disable caddy &gt;/dev/null 2&gt;&amp;1
+			rm -rf /lib/systemd/system/caddy.service
+		else
+			update-rc.d -f caddy remove &gt;/dev/null 2&gt;&amp;1
+			update-rc.d -f v2ray remove &gt;/dev/null 2&gt;&amp;1
+			rm -rf /etc/init.d/caddy
+			rm -rf /etc/init.d/v2ray
+		fi
+
+		# clear
+		echo
+		echo -e &quot;$green V2Ray 卸载完成啦 ....$none&quot;
+		echo
+		echo &quot;如果你觉得这个脚本有哪些地方不够好的话...请告诉我&quot;
+		echo
+		echo &quot;反馈问题: https://github.com/233boy/v2ray/issus&quot;
+		echo
+
+	elif [[ $is_uninstall_v2ray ]]; then
+		pause
+		echo
+
+		if [[ $shadowsocks_status ]]; then
+			del_port $ssport
+		fi
+
+		if [[ $v2ray_transport == &quot;4&quot; || $v2ray_transport == 16 ]]; then
+			del_port &quot;80&quot;
+			del_port &quot;443&quot;
+			del_port $v2ray_port
+		elif [[ $v2ray_transport -ge 9 &amp;&amp; $v2ray_transport -le 15 ]]; then
+			del_port $v2ray_port
+			del_port &quot;multiport&quot;
+		else
+			del_port $v2ray_port
+		fi
+
+		[ $cmd == &quot;apt-get&quot; ] &amp;&amp; rm -rf /etc/network/if-pre-up.d/iptables
+
+		v2ray_pid=$(ps ux | grep &quot;/usr/bin/v2ray/v2ray&quot; | grep -v grep | awk '{print $2}')
+		# [ $v2ray_pid ] &amp;&amp; systemctl stop v2ray
+		[ $v2ray_pid ] &amp;&amp; do_service stop v2ray
+		rm -rf /usr/bin/v2ray
+		rm -rf $_v2ray_sh
+		rm -rf /etc/v2ray
+		rm -rf /var/log/v2ray
+		if [[ $systemd ]]; then
+			systemctl disable v2ray &gt;/dev/null 2&gt;&amp;1
+			rm -rf /lib/systemd/system/v2ray.service
+		else
+			update-rc.d -f v2ray remove &gt;/dev/null 2&gt;&amp;1
+			rm -rf /etc/init.d/v2ray
+		fi
+		# clear
+		echo
+		echo -e &quot;$green V2Ray 卸载完成啦 ....$none&quot;
+		echo
+		echo &quot;如果你觉得这个脚本有哪些地方不够好的话...请告诉我&quot;
+		echo
+		echo &quot;反馈问题: https://github.com/233boy/v2ray/issus&quot;
+		echo
+
+	fi
+elif [[ -f /usr/bin/v2ray/v2ray &amp;&amp; -f /etc/v2ray/config.json ]] &amp;&amp; [[ -f /etc/v2ray/233blog_v2ray_backup.txt &amp;&amp; -d /etc/v2ray/233boy/v2ray ]]; then
+	backup=&quot;/etc/v2ray/233blog_v2ray_backup.txt&quot;
+	while :; do
+		echo
+		read -p &quot;$(echo -e &quot;是否卸载 ${yellow}V2Ray$none [${magenta}Y/N$none]:&quot;)&quot; uninstall_v2ray_ask
+		if [[ -z $uninstall_v2ray_ask ]]; then
+			error
+		else
+			case $uninstall_v2ray_ask in
+			Y | y)
+				is_uninstall_v2ray=true
+				echo
+				echo -e &quot;$yellow 卸载 V2Ray = ${cyan}是${none}&quot;
+				echo
+				break
+				;;
+			N | n)
+				echo
+				echo -e &quot;$red 卸载已取消...$none&quot;
+				echo
+				break
+				;;
+			*)
+				error
+				;;
+			esac
+		fi
+	done
+	if [[ $(sed -n '29p' $backup) == &quot;true&quot; ]]; then
+		caddy_installed=true
+	fi
+
+	if [[ $caddy_installed ]] &amp;&amp; [[ -f /usr/local/bin/caddy &amp;&amp; -f /etc/caddy/Caddyfile ]]; then
+		while :; do
+			echo
+			read -p &quot;$(echo -e &quot;是否卸载 ${yellow}Caddy$none [${magenta}Y/N$none]:&quot;)&quot; uninstall_caddy_ask
+			if [[ -z $uninstall_caddy_ask ]]; then
+				error
+			else
+				case $uninstall_caddy_ask in
+				Y | y)
+					is_uninstall_caddy=true
+					echo
+					echo -e &quot;$yellow 卸载 Caddy = ${cyan}是${none}&quot;
+					echo
+					break
+					;;
+				N | n)
+					echo
+					echo -e &quot;$yellow 卸载 Caddy = ${cyan}否${none}&quot;
+					echo
+					break
+					;;
+				*)
+					error
+					;;
+				esac
+			fi
+		done
+	fi
+
+	if [[ $is_uninstall_v2ray &amp;&amp; $is_uninstall_caddy ]]; then
+		pause
+		echo
+
+		shadowsocks=$(sed -n '31p' $backup)
+
+		if [[ $shadowsocks == &quot;true&quot; ]]; then
+			ssport=$(sed -n '33p' $backup)
+			del_port $ssport
+		fi
+
+		v2ray_transport_opt=$(sed -n '17p' $backup)
+		v2ray_port=$(sed -n '19p' $backup)
+		if [[ $v2ray_transport_opt == &quot;4&quot; ]]; then
+			del_port &quot;80&quot;
+			del_port &quot;443&quot;
+			del_port $v2ray_port
+		elif [[ $v2ray_transport_opt -ge 9 ]]; then
+			del_port $v2ray_port
+			del_port &quot;multiport&quot;
+		else
+			del_port $v2ray_port
+		fi
+
+		[ $cmd == &quot;apt-get&quot; ] &amp;&amp; rm -rf /etc/network/if-pre-up.d/iptables
+
+		v2ray_pid=$(ps ux | grep &quot;/usr/bin/v2ray/v2ray&quot; | grep -v grep | awk '{print $2}')
+		# [ $v2ray_pid ] &amp;&amp; systemctl stop v2ray
+		[ $v2ray_pid ] &amp;&amp; do_service stop v2ray
+
+		rm -rf /usr/bin/v2ray
+		rm -rf /usr/local/bin/v2ray
+		rm -rf /etc/v2ray
+		rm -rf /var/log/v2ray
+
+		caddy_pid=$(pgrep &quot;caddy&quot;)
+		# [ $caddy_pid ] &amp;&amp; systemctl stop caddy
+		[ $caddy_pid ] &amp;&amp; do_service stop caddy
+		rm -rf /usr/local/bin/caddy
+		rm -rf /etc/caddy
+		rm -rf /etc/ssl/caddy
+
+		if [[ $systemd ]]; then
+			systemctl disable v2ray &gt;/dev/null 2&gt;&amp;1
+			rm -rf /lib/systemd/system/v2ray.service
+			systemctl disable caddy &gt;/dev/null 2&gt;&amp;1
+			rm -rf /lib/systemd/system/caddy.service
+		else
+			update-rc.d -f caddy remove &gt;/dev/null 2&gt;&amp;1
+			update-rc.d -f v2ray remove &gt;/dev/null 2&gt;&amp;1
+			rm -rf /etc/init.d/caddy
+			rm -rf /etc/init.d/v2ray
+		fi
+
+		# clear
+		echo
+		echo -e &quot;$green V2Ray 卸载完成啦 ....$none&quot;
+		echo
+		echo &quot;如果你觉得这个脚本有哪些地方不够好的话...请告诉我&quot;
+		echo
+		echo &quot;反馈问题: https://github.com/233boy/v2ray/issus&quot;
+		echo
+
+	elif [[ $is_uninstall_v2ray ]]; then
+		pause
+		echo
+
+		shadowsocks=$(sed -n '31p' $backup)
+
+		if [[ $shadowsocks == &quot;true&quot; ]]; then
+			ssport=$(sed -n '33p' $backup)
+			del_port $ssport
+		fi
+
+		v2ray_transport_opt=$(sed -n '17p' $backup)
+		v2ray_port=$(sed -n '19p' $backup)
+		if [[ $v2ray_transport_opt == &quot;4&quot; ]]; then
+			del_port &quot;80&quot;
+			del_port &quot;443&quot;
+			del_port $v2ray_port
+		elif [[ $v2ray_transport_opt -ge 9 ]]; then
+			del_port $v2ray_port
+			del_port &quot;multiport&quot;
+		else
+			del_port $v2ray_port
+		fi
+
+		[ $cmd == &quot;apt-get&quot; ] &amp;&amp; rm -rf /etc/network/if-pre-up.d/iptables
+
+		v2ray_pid=$(ps ux | grep &quot;/usr/bin/v2ray/v2ray&quot; | grep -v grep | awk '{print $2}')
+		# [ $v2ray_pid ] &amp;&amp; systemctl stop v2ray
+		[ $v2ray_pid ] &amp;&amp; do_service stop v2ray
+		rm -rf /usr/bin/v2ray
+		rm -rf /usr/local/bin/v2ray
+		rm -rf /etc/v2ray
+		rm -rf /var/log/v2ray
+		if [[ $systemd ]]; then
+			systemctl disable v2ray &gt;/dev/null 2&gt;&amp;1
+			rm -rf /lib/systemd/system/v2ray.service
+		else
+			update-rc.d -f v2ray remove &gt;/dev/null 2&gt;&amp;1
+			rm -rf /etc/init.d/v2ray
+		fi
+		# clear
+		echo
+		echo -e &quot;$green V2Ray 卸载完成啦 ....$none&quot;
+		echo
+		echo &quot;如果你觉得这个脚本有哪些地方不够好的话...请告诉我&quot;
+		echo
+		echo &quot;反馈问题: https://github.com/233boy/v2ray/issus&quot;
+		echo
+
+	fi
+else
+	echo -e &quot;
+	$red 大胸弟...你貌似毛有安装 V2Ray ....卸载个鸡鸡哦...$none
+
+	备注...仅支持卸载使用我 (v2ray66.com) 提供的 V2Ray 一键安装脚本
+	&quot; &amp;&amp; exit 1
+fi
+</code></pre>
+<p>}</p>
+<p>args=$1
+[ -z $1 ] &amp;&amp; args=&quot;online&quot;
+case args in
+online)
+	#hello world
+	;;
+local)
+	local_install=true
+	;;
+*)
+	echo
+	echo -e " 大佬...你输入的这个参数 <red $args none> ...这个是什么鬼啊...脚本不认识它哇"
+	echo
+	echo -e " 这个辣鸡脚本仅支持输入green local / online none参数"
+	echo
+	echo -e " 输入yellow local none即是使用本地安装"
+	echo
+	echo -e " 输入yellow online $none即是使用在线安装 (默认)&quot;
+echo
+exit 1
+;;
+esac</p>
+<p>clear
+while :; do
+echo
+echo &quot;........... V2Ray 一键安装脚本 &amp; 管理脚本 by v2ray66.com ..........&quot;
+echo
+echo &quot;帮助说明: https://v2ray66.com/post/1/&quot;
+echo
+echo &quot;搭建教程: https://v2ray66.com/post/2/&quot;
+echo
+echo &quot; 1. 安装&quot;
+echo
+echo &quot; 2. 卸载&quot;
+echo
+if [[ <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>l</mi><mi>o</mi><mi>c</mi><mi>a</mi><msub><mi>l</mi><mi>i</mi></msub><mi>n</mi><mi>s</mi><mi>t</mi><mi>a</mi><mi>l</mi><mi>l</mi><mo>]</mo><mo>]</mo><mo separator="true">;</mo><mi>t</mi><mi>h</mi><mi>e</mi><mi>n</mi><mi>e</mi><mi>c</mi><mi>h</mi><mi>o</mi><mo>−</mo><mi>e</mi><mi mathvariant="normal">&quot;</mi></mrow><annotation encoding="application/x-tex">local_install ]]; then
+		echo -e &quot;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit">o</span><span class="mord mathit">c</span><span class="mord mathit">a</span><span class="mord"><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="vlist"><span style="top:0.15em;margin-right:0.05em;margin-left:-0.01968em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle cramped"><span class="mord mathit">i</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mord mathit">n</span><span class="mord mathit">s</span><span class="mord mathit">t</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mord mathit" style="margin-right:0.01968em;">l</span><span class="mclose">]</span><span class="mclose">]</span><span class="mpunct">;</span><span class="mord mathit">t</span><span class="mord mathit">h</span><span class="mord mathit">e</span><span class="mord mathit">n</span><span class="mord mathit">e</span><span class="mord mathit">c</span><span class="mord mathit">h</span><span class="mord mathit">o</span><span class="mbin">−</span><span class="mord mathit">e</span><span class="mord mathrm">&quot;</span></span></span></span>yellow 温馨提示.. 本地安装已启用 ..<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>n</mi><mi>o</mi><mi>n</mi><mi>e</mi><mi mathvariant="normal">&quot;</mi><mi>e</mi><mi>c</mi><mi>h</mi><mi>o</mi><mi>f</mi><mi>i</mi><mi>r</mi><mi>e</mi><mi>a</mi><mi>d</mi><mo>−</mo><mi>p</mi><mi mathvariant="normal">&quot;</mi></mrow><annotation encoding="application/x-tex">none&quot;
+		echo
+	fi
+	read -p &quot;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord mathit">n</span><span class="mord mathit">o</span><span class="mord mathit">n</span><span class="mord mathit">e</span><span class="mord mathrm">&quot;</span><span class="mord mathit">e</span><span class="mord mathit">c</span><span class="mord mathit">h</span><span class="mord mathit">o</span><span class="mord mathit" style="margin-right:0.10764em;">f</span><span class="mord mathit">i</span><span class="mord mathit" style="margin-right:0.02778em;">r</span><span class="mord mathit">e</span><span class="mord mathit">a</span><span class="mord mathit">d</span><span class="mbin">−</span><span class="mord mathit">p</span><span class="mord mathrm">&quot;</span></span></span></span>(echo -e &quot;请选择 [<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi>m</mi><mi>a</mi><mi>g</mi><mi>e</mi><mi>n</mi><mi>t</mi><mi>a</mi></mrow><mn>1</mn><mo>−</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">{magenta}1-2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.64444em;"></span><span class="strut bottom" style="height:0.8388800000000001em;vertical-align:-0.19444em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathit">m</span><span class="mord mathit">a</span><span class="mord mathit" style="margin-right:0.03588em;">g</span><span class="mord mathit">e</span><span class="mord mathit">n</span><span class="mord mathit">t</span><span class="mord mathit">a</span></span><span class="mord mathrm">1</span><span class="mbin">−</span><span class="mord mathrm">2</span></span></span></span>none]:&quot;)&quot; choose
+case $choose in
+1)
+install
+break
+;;
+2)
+uninstall
+break
+;;
+*)
+error
+;;
+esac
+done
+你只需按照提示一步一步配置就可以了，当部署完成，你需要下载一个V2RAY客户端，手机电脑都。获取方式可以直接到谷歌商店或者到GITHUB搜索下载，然后填入相应的配置，这样就可以了！！！！OK，完成</p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://WSWanghan.github.io/post/STM32-1">
+                  <h3 class="post-title">
+                    关于STM32寄存器操作以及蜂鸣器使用的一点问题
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+
+<script type="application/javascript">
+
+AOS.init();
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>
