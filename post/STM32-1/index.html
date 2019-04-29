@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>文章归档 | Welcome</title>
+<title>关于STM32寄存器操作以及蜂鸣器使用的一点问题 | Welcome</title>
 <meta name="description" content="悟已往之不谏，知来者之可追。
 
 
@@ -96,50 +96,41 @@
 
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
-          
+          <div class="post-detail">
+            <h2 class="post-title">关于STM32寄存器操作以及蜂鸣器使用的一点问题</h2>
+            <div class="post-date">2019-04-29</div>
+            
+              <div class="feature-container" style="background-image: url('https://WSWanghan.github.io/post-images/STM32-1.jpg')">
+              </div>
+            
+            <div class="post-content">
+              <p>APB2-&gt;ENR|=1&lt;&lt;5 //////////////第五位为1，不改变其他位</p>
+<p>GPIOB-&gt;CRL&amp;0XFF0FFFFF;////////清零第五位
+GPIOB-&gt;CRL|=0X0030000;////////使第五位位推挽输出，50MHz
+GPIOB-&gt;ODR|=1&lt;&lt;5;/////////////使第五位输出高电平</p>
+<p>int X=0;
+#define   bitx   0X1&lt;&lt;X;
+GPIOB-&gt;ODR&amp;=~bitx;////////////使第五位输出低电平</p>
+<p>接下来说下蜂鸣器的问题。笔者之前买的单片机板载蜂鸣器清一色都是有源蜂鸣器，结果这次用了个老师的开发板竟然是无源蜂鸣器！！对，就是普中科技的开发板！辣鸡开发板！！害我查错一节课！！</p>
+<p>好了，吐槽完毕。。。。。接下来知道了问题，不就是无源么，我们直接给他高电平几微妙，给他低电平几微秒，一直循环就行了。
+。。。。。。。。。。。。。后续补充如何通过寄存器读取输入电平。</p>
 
-          <h2 class="archives-title">文章归档</h2>
-          <div class="archives-container">
+            </div>
             
-              <h2 class="year" data-aos="fade-in" data-aos-delay="500">2019</h2>
-              
-                
-                  <article class="post">
-                    <a href="https://WSWanghan.github.io/post/STM32-1">
-                      <h2 class="post-title">
-                        关于STM32寄存器操作以及蜂鸣器使用的一点问题
-                      </h2>
-                    </a>
-                  </article>
-                
-              
-                
-                  <article class="post">
-                    <a href="https://WSWanghan.github.io/post/BLOG BUILD">
-                      <h2 class="post-title">
-                        小白搭建个人博客之免费版
-                      </h2>
-                    </a>
-                  </article>
-                
-              
-                
-                  <article class="post">
-                    <a href="https://WSWanghan.github.io/post/this-is-the-first-test">
-                      <h2 class="post-title">
-                        This Is The First Test
-                      </h2>
-                    </a>
-                  </article>
-                
-              
             
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://WSWanghan.github.io/post/BLOG BUILD">
+                  <h3 class="post-title">
+                    小白搭建个人博客之免费版
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
           </div>
-
-          <div class="pagination-container">
-  
-  
-</div>
 
         </div>
       </div>
