@@ -24,7 +24,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://WSWanghan.github.io/favicon.ico?v=1556519129664">
+<link rel="shortcut icon" href="https://WSWanghan.github.io/favicon.ico?v=1556537402875">
 <link rel="stylesheet" href="https://WSWanghan.github.io/styles/main.css">
 
 
@@ -44,7 +44,7 @@
   <div class="top-container" data-aos="fade-right">
     <div class="top-header-container">
       <a class="site-title-container" href="https://WSWanghan.github.io">
-        <img src="https://WSWanghan.github.io/images/avatar.png?v=1556519129664" class="site-logo">
+        <img src="https://WSWanghan.github.io/images/avatar.png?v=1556537402875" class="site-logo">
         <h1 class="site-title">Welcome</h1>
       </a>
       <div class="menu-btn" @click="menuVisible = !menuVisible">
@@ -105,7 +105,7 @@
             
             <div class="post-content">
               <p>APB2-&gt;ENR|=1&lt;&lt;5 //////////////第五位为1，不改变其他位</p>
-<p>GPIOB-&gt;CRL&amp;0XFF0FFFFF;////////清零第五位
+<p>GPIOB-&gt;CRL&amp;=0XFF0FFFFF;////////清零第五位
 GPIOB-&gt;CRL|=0X0030000;////////使第五位位推挽输出，50MHz
 GPIOB-&gt;ODR|=1&lt;&lt;5;/////////////使第五位输出高电平</p>
 <p>int X=0;
@@ -113,7 +113,12 @@ GPIOB-&gt;ODR|=1&lt;&lt;5;/////////////使第五位输出高电平</p>
 GPIOB-&gt;ODR&amp;=~bitx;////////////使第五位输出低电平</p>
 <p>接下来说下蜂鸣器的问题。笔者之前买的单片机板载蜂鸣器清一色都是有源蜂鸣器，结果这次用了个老师的开发板竟然是无源蜂鸣器！！对，就是普中科技的开发板！辣鸡开发板！！害我查错一节课！！</p>
 <p>好了，吐槽完毕。。。。。接下来知道了问题，不就是无源么，我们直接给他高电平几微妙，给他低电平几微秒，一直循环就行了。
-。。。。。。。。。。。。。后续补充如何通过寄存器读取输入电平。</p>
+OK，现在让我们看一下如何通过寄存器来读取输入电平。
+#define X=0;</p>
+<h1 id="define-bitxin-gpioe-idr1x10-c语言好像是这样的">***#define bitxin  ((GPIOE-&gt;IDR&amp;(1&lt;&lt;X))?1：0) ***;/////////////////////C语言好像是这样的</h1>
+<p>//////////////////////////////////////////////////////////////////////////////////
+最后突然想起蓝桥杯的一个遗憾，按键输入实验：：</p>
+<p>如果按键没有上/下拉电阻，则应该加一个上/下拉语句；比如按键按下输入的是低电平，则应该让相应引脚输出高电平。若按键按下输入的是高电平，则应该让相应的引脚输出低电平。</p>
 
             </div>
             
