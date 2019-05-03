@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" >
 
-<title>IIC的软件写法 | 客舍青青柳色新</title>
+<title>圣经故事—2 | 客舍青青柳色新</title>
 <meta name="description" content="悟已往之不谏，知来者之可追。
 
 
@@ -333,167 +333,44 @@
       <div class="main-container">
         <div class="content-container" data-aos="fade-up">
           <div class="post-detail">
-            <h2 class="post-title">IIC的软件写法</h2>
-            <div class="post-date">2019-05-01</div>
+            <h2 class="post-title">圣经故事—2</h2>
+            <div class="post-date">2019-05-03</div>
             
-              <div class="feature-container" style="background-image: url('https://WSWanghan.github.io/post-images/STM32_2.jpg')">
+              <div class="feature-container" style="background-image: url('https://WSWanghan.github.io/post-images/sheng-jing-gu-shi-2.jpg')">
               </div>
             
             <div class="post-content">
-              <p>这期文章，我们来学习下IIC软件写法。</p>
-<p>软件IIC:///////////////////////////////////////////////////////////////////////////////////////////
-/** I2C 总线接口 */
-#define I2C_PORT GPIOB
-#define SDA_Pin	GPIO_Pin_7
-#define SCL_Pin GPIO_Pin_6</p>
-<p>#define FAILURE 0
-#define SUCCESS 1</p>
-<p>//配置SDA信号线为输入模式
-void SDA_Input_Mode()
-{
-GPIO_InitTypeDef GPIO_InitStructure;</p>
-<pre><code>GPIO_InitStructure.GPIO_Pin = SDA_Pin;
-GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;	 
-
-GPIO_Init(I2C_PORT, &amp;GPIO_InitStructure);
-</code></pre>
-<p>}</p>
-<p>//配置SDA信号线为输出模式
-void SDA_Output_Mode()
-{
-GPIO_InitTypeDef GPIO_InitStructure;</p>
-<pre><code> GPIO_InitStructure.GPIO_Pin = SDA_Pin;
-GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-
-GPIO_Init(I2C_PORT, &amp;GPIO_InitStructure);
-</code></pre>
-<p>}</p>
-<p>//
-void SDA_Output( uint16_t val )
-{
-if ( val ) {
-GPIO_SetBits(I2C_PORT,SDA_Pin);
-} else {
-GPIO_ResetBits(I2C_PORT,SDA_Pin);
-}
-}</p>
-<p>//
-void SCL_Output( uint16_t val )
-{
-if ( val ) {
-GPIO_SetBits(I2C_PORT,SCL_Pin);
-} else {
-GPIO_ResetBits(I2C_PORT,SCL_Pin);
-}
-}</p>
-<p>//
-uint8_t SDA_Input()
-{
-return GPIO_ReadInputDataBit( I2C_PORT, SDA_Pin);
-}</p>
-<p>//延时程序
-void delay1(unsigned int n)
-{
-unsigned int i;
-for ( i=0;i&lt;n;++i);
-}</p>
-<p>//I2C总线启动
-void I2CStart(void)
-{
-SDA_Output(1);delay1(500);
-SCL_Output(1);delay1(500);
-SDA_Output(0);delay1(500);
-SCL_Output(0);delay1(500);
-}</p>
-<p>//I2C总线停止
-void I2CStop(void)
-{
-SCL_Output(0); delay1(500);
-SDA_Output(0); delay1(500);
-SCL_Output(1); delay1(500);
-SDA_Output(1); delay1(500);</p>
-<p>}</p>
-<p>//等待应答
-unsigned char I2CWaitAck(void)
-{
-unsigned short cErrTime = 5;
-SDA_Input_Mode();
-delay1(500);
-SCL_Output(1);delay1(500);
-while(SDA_Input())
-{
-cErrTime--;
-delay1(500);
-if (0 == cErrTime)
-{
-SDA_Output_Mode();
-I2CStop();
-return FAILURE;
-}
-}
-SDA_Output_Mode();
-SCL_Output(0);delay1(500);
-return SUCCESS;
-}</p>
-<p>//发送应答位
-void I2CSendAck(void)
-{
-SDA_Output(0);delay1(500);
-delay1(500);
-SCL_Output(1); delay1(500);
-SCL_Output(0); delay1(500);</p>
-<p>}</p>
-<p>//
-void I2CSendNotAck(void)
-{
-SDA_Output(1);
-delay1(500);
-SCL_Output(1); delay1(500);
-SCL_Output(0); delay1(500);</p>
-<p>}</p>
-<p>//通过I2C总线发送一个字节数据
-void I2CSendByte(unsigned char cSendByte)
-{
-unsigned char  i = 8;
-while (i--)
-{
-SCL_Output(0);delay1(500);
-SDA_Output(cSendByte &amp; 0x80); delay1(500);
-cSendByte += cSendByte;
-delay1(500);
-SCL_Output(1);delay1(500);
-}
-SCL_Output(0);delay1(500);
-}</p>
-<p>//从I2C总线接收一个字节数据
-unsigned char I2CReceiveByte(void)
-{
-unsigned char i = 8;
-unsigned char cR_Byte = 0;
-SDA_Input_Mode();
-while (i--)
-{
-cR_Byte += cR_Byte;
-SCL_Output(0);delay1(500);
-delay1(500);
-SCL_Output(1);delay1(500);
-cR_Byte |=  SDA_Input();
-}
-SCL_Output(0);delay1(500);
-SDA_Output_Mode();
-return cR_Byte;
-}</p>
+              <p>OK ,上篇说到以色列人离开了应许之地来到了埃及成了法老王的奴隶；
+某个不知名奴隶：这可咋办，生下儿子养不活啊。于是把儿子放在河里漂泊；
+法老王姐姐：哇塞，这孩子好可爱，我要养起来！于是取名摩西并养育他；
+摩西渐长。
+法老王：我要和你撒拉！于是法老王打不过；
+法老王：哼，你是奴隶的儿子！于是摩西回到以色列人阵营；
+死后成神的亚伯拉罕（其实就是上帝，后面方便起见称上帝）：我看到我的子民在受苦，皮卡丘，去吧，去拯救他们！
+摩西：我要怎么拯救捏。
+上帝：我与你同在！于是摩西开始拯救他的子民；
+摩西对法老：上帝派我来对你说快让我的子民离开！
+法老：好怕怕哦，我就不，你咋地。
+摩西：我不咋地！于是上帝降下十灾；
+摩西对另一个奴隶约书亚：现在你信了有上帝么。于是约书亚就信了；
+第十灾--死亡之神开始前，摩西：把羊血涂门上吧子民们，这样我们就不会受影响啦。
+以色列人：OJK。于是开始涂羊血，与此同时，法老王儿子死了，埃及人所有长子都死了；
+法老：滚！你们这群以色列人滚出我的土地！于是摩西带领众人开始离开埃及；
+法老：儿子你死的太惨了，我要把他们抓回来给你建造坟墓，用摩西的尸体给你的坟墓奠基！于是法老追摩西，摩西带领以色列人到了红海边，法老王军队追来了；
+摩西:主啊！上帝与我们同在，和我一起走过克！于是摩西分海！！！！！！！
+法老王：追呀！于是以色列人过去后法老王的军队死在了红海里；
+后来，摩西带以色列人来到了西奈山，传下摩西十诫；
+摩西：约书亚！去征服耶利哥吧！</p>
+<h2 id="下篇攻打耶利哥参孙">下篇：攻打耶利哥&amp;参孙；</h2>
 
             </div>
             
             
               <div class="next-post">
                 <div class="next">下一篇</div>
-                <a href="https://WSWanghan.github.io/post/SOFTERWARE">
+                <a href="https://WSWanghan.github.io/post/sheng-jing-gu-shi-1">
                   <h3 class="post-title">
-                    关于校园网设备限速破解方案的一种猜想
+                    圣经故事-1
                   </h3>
                 </a>
               </div>
